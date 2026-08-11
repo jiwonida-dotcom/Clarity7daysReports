@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clarity 7-Day Report — 심층 분석 20건 (2026-08-04 ~ 2026-08-10)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#E9EDF7; --bg2:#F4F6FC; --card:#FFFFFF;
+    --ink:#1B2559; --muted:#9AA4BF; --label:#8B95AD;
+    --blue:#4B63F7; --cyan:#33C9E0; --pos:#28C76F; --neg:#FF5B5B; --warn:#FFB020;
+    --shadow:0 10px 30px rgba(80,100,160,0.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Poppins','Inter','Pretendard',-apple-system,sans-serif;
+    background:linear-gradient(160deg,var(--bg1),var(--bg2));color:var(--ink);
+    padding:28px;min-height:100vh;-webkit-font-smoothing:antialiased}
+  .shell{max-width:1120px;margin:0 auto;background:var(--card);border-radius:30px;
+    box-shadow:var(--shadow);padding:32px 34px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#3FD8E8,#3B4FE0);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:20px;
+    box-shadow:0 8px 18px rgba(59,79,224,.35)}
+  .brand h1{font-size:17px;font-weight:700;letter-spacing:.02em}
+  .brand span{display:block;font-size:11px;color:var(--muted);font-weight:500}
+  .datepill{background:#F1F4FB;color:#5A6683;font-size:13px;font-weight:600;
+    padding:9px 16px;border-radius:12px}
+  .summary{background:linear-gradient(135deg,#eef1fe,#f6f4ff);border:1px solid #e6e9fb;
+    border-radius:16px;padding:14px 18px;margin-bottom:24px;font-size:14px;color:#3a447a;font-weight:500;line-height:1.7}
+  .summary b{color:var(--ink)}
+  .label{font-size:11px;font-weight:600;letter-spacing:.09em;color:var(--label);text-transform:uppercase}
+  .more{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em}
+  .sechead{display:flex;justify-content:space-between;align-items:center;margin:0 0 14px}
+  .badge{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:600;border-radius:8px;padding:2px 8px;white-space:nowrap}
+  .up{color:var(--pos);background:rgba(40,199,111,.12)}
+  .down{color:var(--neg);background:rgba(255,91,91,.12)}
+  .neutral{color:var(--label);background:#f1f4fb}
+  .warnb{color:var(--warn);background:rgba(255,176,32,.14)}
+  .flag{box-shadow:0 0 0 1.5px var(--warn) inset}
+  section{margin-top:30px}
+  .cards4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .mcard{border-radius:20px;padding:18px;color:#fff;position:relative;overflow:hidden}
+  .mcard .ic{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.22);
+    display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:20px}
+  .mcard .t{font-size:12.5px;opacity:.92;font-weight:500}
+  .mcard .v{font-size:24px;font-weight:700;margin-top:2px}
+  .mcard .d{font-size:12px;opacity:.9;margin-top:6px;font-weight:500;line-height:1.5}
+  .g-orange{background:linear-gradient(135deg,#FF9F43,#FF7A45);box-shadow:0 12px 24px rgba(255,122,69,.35)}
+  .g-indigo{background:linear-gradient(135deg,#5B6CF9,#7A5BF9);box-shadow:0 12px 24px rgba(107,91,249,.35)}
+  .g-cyan{background:linear-gradient(135deg,#25D6E8,#2FA8E8);box-shadow:0 12px 24px rgba(47,168,232,.35)}
+  .g-green{background:linear-gradient(135deg,#3FD98A,#2FB874);box-shadow:0 12px 24px rgba(47,184,116,.35)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .ins{background:var(--card);border:1px solid #eef1f7;border-radius:20px;padding:18px 20px;box-shadow:var(--shadow)}
+  .ins.hi{box-shadow:var(--shadow),0 0 0 1.5px var(--warn) inset}
+  .ins .hd{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+  .num{width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,#5A6CF8,#3B4FE0);color:#fff;
+    font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none;
+    box-shadow:0 6px 14px rgba(59,79,224,.28)}
+  .ins h3{font-size:14px;font-weight:700;line-height:1.45;flex:1}
+  .ins .metric{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:4px 0 9px 40px}
+  .ins .metric .big{font-size:23px;font-weight:700;line-height:1}
+  .ins .metric .unit{font-size:12px;color:var(--muted);font-weight:600}
+  .ins p{font-size:12.8px;color:#5A6683;line-height:1.65;margin-left:40px;font-weight:500}
+  .ins p b{color:var(--ink)}
+  .minibars{margin:10px 0 0 40px}
+  .mb{display:flex;align-items:center;gap:9px;padding:3px 0;font-size:11.5px;font-weight:600}
+  .mb .mn{width:118px;color:#5A6683;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mb .mt{flex:1;height:8px;border-radius:6px;background:#eef1f7;overflow:hidden}
+  .mb .mt>i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#5A6CF8,#33C9E0)}
+  .mb .mt>i.warnbar{background:linear-gradient(90deg,#FF9F43,#FF7A45)}
+  .mb .mt>i.negbar{background:linear-gradient(90deg,#FF7A8A,#FF5B5B)}
+  .mb .mv{width:76px;text-align:right;color:var(--ink);flex:none}
+  .trend{display:flex;align-items:flex-end;gap:4px;height:120px;padding:6px 2px 0}
+  .tcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+  .tbar{width:100%;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#5A6CF8,#33C9E0)}
+  .tbar.pk{background:linear-gradient(180deg,#FF9F43,#FF7A45)}
+  .tcol .tl{font-size:9px;color:var(--muted);margin-top:6px;font-weight:600}
+  .actions{margin-top:30px}
+  .act{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-bottom:1px dashed #e7ebf4;font-size:13.5px;line-height:1.65}
+  .act:last-child{border-bottom:none}
+  .actn{width:24px;height:24px;border-radius:8px;background:var(--blue);color:#fff;font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;flex:none}
+  .foot{margin-top:26px;text-align:center;color:var(--muted);font-size:11px;line-height:1.7}
+  .grouphd{display:flex;align-items:center;gap:10px;margin:0 0 16px}
+  .gtile{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+    font-size:15px;background:#eef1fe;color:var(--blue);flex:none}
+  .grouphd .gt{font-size:15px;font-weight:700}
+  .grouphd .gs{font-size:11.5px;color:var(--muted);font-weight:500}
+  @media(max-width:860px){.cards4{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}
+    .ins .metric,.ins p,.minibars{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">C</div>
+      <div><h1>Clarity 7-Day Report — 심층 분석 20건</h1><span>uplusumobile.com · 전환·기술품질·유입·행동 다축 분석</span></div>
+    </div>
+    <div class="datepill">📅 2026-08-04 ~ 2026-08-10 (7일)</div>
+  </div>
+
+  <div class="summary">
+    <b>가장 중요한 발견 2가지:</b>
+    ① <b>단일 JS 오류 1건이 전체 세션의 14.2%(47,630건)</b>에 영향을 주고 있으며, 세션은 줄었는데 오류 세션 비율은 21.7% → <b>23.1%로 악화</b>됐습니다.
+    ② <b>모바일이 트래픽의 88.9%를 차지하지만 개통 완료율은 23.2%로 PC(33.7%)보다 1.45배 낮습니다</b> —
+    전환 손실의 대부분이 모바일에서 발생하고 있습니다.
+  </div>
+
+  <!-- HEADLINE CARDS -->
+  <section style="margin-top:0">
+    <div class="sechead"><span class="label">Headline Findings</span><span class="more">최근 7일</span></div>
+    <div class="cards4">
+      <div class="mcard g-orange"><div class="ic">🐞</div><div class="t">JS 오류 영향 세션</div><div class="v">77,655</div><div class="d">전체의 23.1% · 직전주 21.7% ▲</div></div>
+      <div class="mcard g-indigo"><div class="ic">📱</div><div class="t">모바일 개통 완료율</div><div class="v">23.2%</div><div class="d">PC 33.7% 대비 ▼10.5%p</div></div>
+      <div class="mcard g-cyan"><div class="ic">🤝</div><div class="t">제휴 퍼널 완료율</div><div class="v">2.2%</div><div class="d">본 퍼널 25.4%의 1/11 수준</div></div>
+      <div class="mcard g-green"><div class="ic">🚪</div><div class="t">/my/main 이탈률</div><div class="v">53.2%</div><div class="d">144,832 방문 중 77,123 종료</div></div>
+    </div>
+  </section>
+
+  <!-- A. 전환·퍼널 -->
+  <section>
+    <div class="grouphd"><div class="gtile">🎯</div>
+      <div><div class="gt">A. 전환·퍼널 (6건)</div><div class="gs">개통·납부 경로에서 실제로 돈이 새는 지점</div></div>
+    </div>
+    <div class="grid2">
+
+      <div class="ins hi">
+        <div class="hd"><div class="num">1</div><h3>모바일 개통 완료율이 PC보다 1.45배 낮다</h3><span class="badge down">치명</span></div>
+        <div class="metric"><span class="big">23.2%</span><span class="unit">모바일 · PC 33.7% · 태블릿 15.6%</span></div>
+        <div class="minibars">
+          <div class="mb"><span class="mn">PC</span><span class="mt"><i style="width:100%"></i></span><span class="mv">33.7%</span></div>
+          <div class="mb"><span class="mn">Mobile</span><span class="mt"><i class="warnbar" style="width:68.8%"></i></span><span class="mv">23.2%</span></div>
+          <div class="mb"><span class="mn">Tablet</span><span class="mt"><i class="negbar" style="width:46.3%"></i></span><span class="mv">15.6%</span></div>
+        </div>
+        <p style="margin-top:10px">모바일 진입 8,168 → 완료 1,894 / PC 진입 2,340 → 완료 788. <b>트래픽의 88.9%가 모바일인데 전환은 열위</b>라 손실 규모가 가장 큽니다. PC 수준(33.7%)까지만 올려도 주당 <b>+859건</b> 추가 개통이 가능합니다.</p>
+      </div>
+
+      <div class="ins hi">
+        <div class="hd"><div class="num">2</div><h3>제휴(partner) 퍼널이 사실상 작동하지 않는다</h3><span class="badge down">치명</span></div>
+        <div class="metric"><span class="big">2.2%</span><span class="unit">994 진입 → 202 확인 → 22 완료</span></div>
+        <div class="minibars">
+          <div class="mb"><span class="mn">진입 usimInfoWrite</span><span class="mt"><i style="width:100%"></i></span><span class="mv">994</span></div>
+          <div class="mb"><span class="mn">확인 confirmJoin</span><span class="mt"><i class="warnbar" style="width:20.3%"></i></span><span class="mv">202</span></div>
+          <div class="mb"><span class="mn">완료 openRequest</span><span class="mt"><i class="negbar" style="width:2.2%"></i></span><span class="mv">22</span></div>
+        </div>
+        <p style="margin-top:10px">본 퍼널 완료율 25.4% 대비 <b>1/11 수준</b>입니다. 특히 확인(202) → 완료(22) 구간에서 <b>89.1%가 증발</b>합니다. 제휴 채널 전용 완료 처리 로직이나 이벤트 계측 누락 가능성을 먼저 의심해야 합니다.</p>
+      </div>
+
+      <div class="ins hi">
+        <div class="hd"><div class="num">3</div><h3>1→2단계 이탈의 물리적 원인: usimInfoWrite dead click</h3><span class="badge warnb">높음</span></div>
+        <div class="metric"><span class="big">6,478</span><span class="unit">dead click · 세션당 0.61회 · rage 570</span></div>
+        <p>퍼널 1단계 <b>/onsale/usimInfoWrite</b>는 사이트 전체 dead click 3위, rage click 4위입니다. 진입 세션 10,629건당 dead click 0.61회 = <b>두 세션 중 한 번 이상 "눌렀는데 반응 없음"</b>이 발생합니다. 1→2단계 이탈 –50.3%의 직접 원인일 가능성이 높습니다.</p>
+      </div>
+
+      <div class="ins hi">
+        <div class="hd"><div class="num">4</div><h3>요금 납부에서 개통 퍼널보다 큰 절대 손실 발생</h3><span class="badge down">높음</span></div>
+        <div class="metric"><span class="big">–39.1%</span><span class="unit">info 37,948 → payment 23,117</span></div>
+        <p>납부 정보(<b>/bill/pay/info</b>) 37,948세션 중 24,944세션(<b>65.7%</b>)이 그 페이지를 <b>마지막으로 세션을 종료</b>합니다. 결제 진행 페이지도 이탈 4위(9,064). 개통 퍼널보다 트래픽이 3.6배 크기 때문에 <b>절대 손실은 여기가 더 큽니다</b>.</p>
+      </div>
+
+      <div class="ins">
+        <div class="hd"><div class="num">5</div><h3>최종 관문 confirmJoin에도 dead click 3,280회</h3><span class="badge warnb">중간</span></div>
+        <div class="metric"><span class="big">3,280</span><span class="unit">dead click · 세션당 0.96회</span></div>
+        <p>6단계 <b>/onsale/confirmJoin</b>의 dead click은 방문 세션(3,419)과 거의 1:1입니다. 6단계→완료 이탈이 직전주 –17.9%에서 <b>–21.0%로 악화</b>된 것과 정확히 맞물립니다. 약관 동의 체크박스·최종 제출 버튼의 클릭 반응성을 우선 점검하세요.</p>
+      </div>
+
+      <div class="ins">
+        <div class="hd"><div class="num">6</div><h3>rage click 1위는 개통이 아닌 '납부수단 변경'</h3><span class="badge warnb">중간</span></div>
+        <div class="metric"><span class="big">1,314</span><span class="unit">/bill/pay/method/change/bank</span></div>
+        <div class="minibars">
+          <div class="mb"><span class="mn">납부수단(은행)</span><span class="mt"><i class="negbar" style="width:100%"></i></span><span class="mv">1,314</span></div>
+          <div class="mb"><span class="mn">joinHowtoOpen</span><span class="mt"><i class="warnbar" style="width:70%"></i></span><span class="mv">920</span></div>
+          <div class="mb"><span class="mn">결합 our/info</span><span class="mt"><i class="warnbar" style="width:62.9%"></i></span><span class="mv">827</span></div>
+          <div class="mb"><span class="mn">usimInfoWrite</span><span class="mt"><i style="width:43.4%"></i></span><span class="mv">570</span></div>
+        </div>
+        <p style="margin-top:10px">전체 rage click은 세션의 0.36%로 낮지만, <b>특정 4개 페이지에 집중</b>되어 있습니다. 계좌 등록 폼은 실패 시 사용자가 반복 클릭하는 전형적 패턴이므로 <b>오류 메시지 노출 방식</b>을 확인할 필요가 있습니다.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- B. 기술 품질 -->
+  <section>
+    <div class="grouphd"><div class="gtile">🛠</div>
+      <div><div class="gt">B. 기술 품질 (4건)</div><div class="gs">전환 이전에 먼저 고쳐야 할 프론트엔드 문제</div></div>
+    </div>
+    <div class="grid2">
+
+      <div class="ins hi">
+        <div class="hd"><div class="num">7</div><h3>단일 JS 오류 1건이 전체 세션의 14.2%에 영향</h3><span class="badge down">치명</span></div>
+        <div class="metric"><span class="big">47,630</span><span class="unit">세션 · reading 'children'</span></div>
+        <p><code style="background:#f1f4fb;padding:1px 6px;border-radius:6px;font-size:11.5px">Cannot read properties of undefined (reading 'children')</code> 47,630건 + Safari 변형 <code style="background:#f1f4fb;padding:1px 6px;border-radius:6px;font-size:11.5px">undefined is not an object (evaluating 'e.children')</code> 12,670건 = <b>합계 60,300 세션(18.0%)</b>이 동일 원인입니다. DOM 조회 결과가 null인 상태에서 <b>.children</b>에 접근하는 코드 1곳만 고치면 오류의 대부분이 사라집니다.</p>
+      </div>
+
+      <div class="ins hi">
+        <div class="hd"><div class="num">8</div><h3>세션은 줄었는데 오류 세션 비율은 올랐다</h3><span class="badge down">높음</span></div>
+        <div class="metric"><span class="big">23.1%</span><span class="unit">직전주 21.7% · ▲1.4%p</span></div>
+        <p>오류 세션 75,630 → <b>77,655 (▲2.7%)</b>인데 전체 세션은 –3.7% 감소했습니다. 즉 <b>절대량과 비율이 동시에 악화</b>된 유일한 지표입니다. 지난주 배포 내역과 대조해 회귀(regression) 여부를 확인해야 합니다.</p>
+      </div>
+
+      <div class="ins">
+        <div class="hd"><div class="num">9</div><h3>데이터 사용량 게이지 스크립트 로드 실패</h3><span class="badge warnb">중간</span></div>
+        <div class="metric"><span class="big">10,440</span><span class="unit">세션 · amountBar is not a function</span></div>
+        <p><code style="background:#f1f4fb;padding:1px 6px;border-radius:6px;font-size:11.5px">uiCommon.progressAni.amountBar is not a function</code> (2개 변형 합산). 마이페이지 데이터 잔여량 프로그레스 애니메이션이 <b>uiCommon 로드 전에 호출</b>되는 순서 문제로 보입니다. 이어서 <code style="background:#f1f4fb;padding:1px 6px;border-radius:6px;font-size:11.5px">$commUtil has already been declared</code> 2,994건 — <b>공통 스크립트 중복 삽입</b> 정황입니다.</p>
+      </div>
+
+      <div class="ins hi">
+        <div class="hd"><div class="num">10</div><h3>PC LCP 17.1초 — 측정값 이상 또는 심각한 지연</h3><span class="badge down">높음</span></div>
+        <div class="metric"><span class="big">17.1s</span><span class="unit">PC LCP · 모바일 4.67s · 태블릿 2.97s</span></div>
+        <div class="minibars">
+          <div class="mb"><span class="mn">PC LCP</span><span class="mt"><i class="negbar" style="width:100%"></i></span><span class="mv">17.13s</span></div>
+          <div class="mb"><span class="mn">Mobile LCP</span><span class="mt"><i class="warnbar" style="width:27.3%"></i></span><span class="mv">4.67s</span></div>
+          <div class="mb"><span class="mn">Tablet LCP</span><span class="mt"><i style="width:17.4%"></i></span><span class="mv">2.97s</span></div>
+        </div>
+        <p style="margin-top:10px">PC는 페이지 로드가 3.6초로 가장 빠른데 LCP만 17.1초로 <b>역전</b>되어 있어, 지연 로딩되는 대형 요소(배너·차트)나 계측 오류가 의심됩니다. 모바일 LCP 4.67초·로드 7.02초도 Google 권장(2.5초) 대비 <b>약 2~3배</b>입니다.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- C. 사용자·디바이스 -->
+  <section>
+    <div class="grouphd"><div class="gtile">👥</div>
+      <div><div class="gt">C. 사용자·디바이스 (4건)</div><div class="gs">트래픽 감소가 어디서 왔는지</div></div>
+    </div>
+    <div class="grid2">
+
+      <div class="ins hi">
+        <div class="hd"><div class="num">11</div><h3>감소분은 전부 '신규 유입'에서 나왔다</h3><span class="badge down">높음</span></div>
+        <div class="metric"><span class="big">–7.9%</span><span class="unit">신규 세션 · 재방문은 ▲2.1%</span></div>
+        <div class="minibars">
+          <div class="mb"><span class="mn">신규 (금주)</span><span class="mt"><i class="warnbar" style="width:92.1%"></i></span><span class="mv">196,405</span></div>
+          <div class="mb"><span class="mn">신규 (직전주)</span><span class="mt"><i style="width:100%"></i></span><span class="mv">213,271</span></div>
+          <div class="mb"><span class="mn">재방문 (금주)</span><span class="mt"><i style="width:65.4%"></i></span><span class="mv">139,462</span></div>
+          <div class="mb"><span class="mn">재방문 (직전주)</span><span class="mt"><i style="width:64.0%"></i></span><span class="mv">136,592</span></div>
+        </div>
+        <p style="margin-top:10px">신규 –16,866 / 재방문 +2,870. 신규 비중이 <b>61.0% → 58.5%</b>로 하락했습니다. 기존 고객 활동은 오히려 늘었으므로 <b>제품 이슈가 아니라 신규 획득(마케팅) 측 변화</b>로 보는 게 타당합니다 → 인사이트 16과 연결.</p>
+      </div>
+
+      <div class="ins">
+        <div class="hd"><div class="num">12</div><h3>모바일만 줄고 PC·태블릿은 늘었다</h3><span class="badge neutral">참고</span></div>
+        <div class="metric"><span class="big">–5.4%</span><span class="unit">Mobile · PC ▲9.2% · Tablet ▲12.0%</span></div>
+        <p>PC 세션 비중이 <b>8.84% → 10.05%</b>로 상승했습니다. PC의 개통 완료율이 모바일보다 높다는 점(인사이트 1)을 감안하면, 이번 주 개통 완료가 급증(▲89.7%)한 배경 중 하나가 <b>PC 비중 상승</b>일 수 있습니다. 즉 전환율 개선이 아니라 <b>믹스 변화</b>일 가능성을 검증해야 합니다.</p>
+      </div>
+
+      <div class="ins">
+        <div class="hd"><div class="num">13</div><h3>QA 대상 브라우저 2종으로 76.7% 커버 가능</h3><span class="badge neutral">참고</span></div>
+        <div class="metric"><span class="big">76.7%</span><span class="unit">ChromeMobile 41.6% + MobileSafari 35.1%</span></div>
+        <div class="minibars">
+          <div class="mb"><span class="mn">Chrome Mobile</span><span class="mt"><i style="width:100%"></i></span><span class="mv">139,539</span></div>
+          <div class="mb"><span class="mn">Mobile Safari</span><span class="mt"><i style="width:84.2%"></i></span><span class="mv">117,508</span></div>
+          <div class="mb"><span class="mn">Samsung Internet</span><span class="mt"><i style="width:20.9%"></i></span><span class="mv">29,167</span></div>
+          <div class="mb"><span class="mn">Chrome (PC)</span><span class="mt"><i style="width:14.7%"></i></span><span class="mv">20,538</span></div>
+        </div>
+        <p style="margin-top:10px">OS는 Android 53.3% · iOS 36.6% · Windows 9.1%. <b>Samsung Internet 8.7%(29,167)</b>는 국내 특성상 무시할 수 없는 규모라 인사이트 7의 Safari 계열 오류와 함께 <b>3종 브라우저 회귀 테스트</b>를 권장합니다. InstagramApp 인앱 브라우저도 2,512건 존재합니다.</p>
+      </div>
+
+      <div class="ins">
+        <div class="hd"><div class="num">14</div><h3>모바일은 짧고 집중, PC는 길고 방치</h3><span class="badge neutral">참고</span></div>
+        <div class="metric"><span class="big">5.4배</span><span class="unit">PC 712초 vs 모바일 132초</span></div>
+        <p>그러나 <b>활성 시간 비율</b>은 모바일 56.0%(74/132초)가 PC 39.4%(281/712초)보다 <b>높습니다</b>. PC는 탭을 열어둔 채 방치하는 세션이 많다는 뜻이므로, PC 체류시간을 성과 지표로 쓰면 안 됩니다. 반대로 <b>모바일은 2분 안에 결론을 내야 하는 화면</b>이라는 설계 제약이 확인됩니다.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- D. 유입·채널 -->
+  <section>
+    <div class="grouphd"><div class="gtile">📡</div>
+      <div><div class="gt">D. 유입·채널 (4건)</div><div class="gs">채널별 품질 격차</div></div>
+    </div>
+    <div class="grid2">
+
+      <div class="ins hi">
+        <div class="hd"><div class="num">15</div><h3>Affiliates –31.4% 급감, Referral +43.8% 급증</h3><span class="badge warnb">주의</span></div>
+        <div class="metric"><span class="big">±40%</span><span class="unit">두 채널이 정반대로 이동</span></div>
+        <div class="minibars">
+          <div class="mb"><span class="mn">Referral</span><span class="mt"><i style="width:100%"></i></span><span class="mv">▲43.8%</span></div>
+          <div class="mb"><span class="mn">PaidSearch</span><span class="mt"><i style="width:25.3%"></i></span><span class="mv">▲11.1%</span></div>
+          <div class="mb"><span class="mn">Other</span><span class="mt"><i style="width:17.8%"></i></span><span class="mv">▲7.8%</span></div>
+          <div class="mb"><span class="mn">Direct</span><span class="mt"><i class="warnbar" style="width:11.6%"></i></span><span class="mv">▼5.1%</span></div>
+          <div class="mb"><span class="mn">Affiliates</span><span class="mt"><i class="negbar" style="width:71.7%"></i></span><span class="mv">▼31.4%</span></div>
+        </div>
+        <p style="margin-top:10px">Affiliates 23,142 → 15,867 (–7,275)로 <b>신규 세션 감소분(–16,866)의 43%</b>를 설명합니다. Referral은 15,525 → 22,321이며 커뮤니티 유입(<b>ppomppu 3,686</b>)이 포함되어 있어, <b>유료 제휴가 빠진 자리를 자연 유입이 일부 메운</b> 구조입니다.</p>
+      </div>
+
+      <div class="ins hi">
+        <div class="hd"><div class="num">16</div><h3>Affiliates·Social은 세션당 페이지가 1.0 — 회유 제로</h3><span class="badge down">높음</span></div>
+        <div class="metric"><span class="big">1.00</span><span class="unit">pages/session · Direct는 2.49</span></div>
+        <div class="minibars">
+          <div class="mb"><span class="mn">Direct</span><span class="mt"><i style="width:100%"></i></span><span class="mv">2.49p</span></div>
+          <div class="mb"><span class="mn">Referral</span><span class="mt"><i class="warnbar" style="width:49.0%"></i></span><span class="mv">1.22p</span></div>
+          <div class="mb"><span class="mn">OrganicSearch</span><span class="mt"><i class="warnbar" style="width:43.0%"></i></span><span class="mv">1.07p</span></div>
+          <div class="mb"><span class="mn">PaidSearch</span><span class="mt"><i class="negbar" style="width:41.0%"></i></span><span class="mv">1.02p</span></div>
+          <div class="mb"><span class="mn">Affiliates</span><span class="mt"><i class="negbar" style="width:40.2%"></i></span><span class="mv">1.00p</span></div>
+        </div>
+        <p style="margin-top:10px">유료 채널(PaidSearch 1.02 · Affiliates 1.00)로 들어온 사용자는 <b>랜딩 1페이지만 보고 나갑니다</b>. Social은 평균 체류가 <b>1.54초</b>로 사실상 미노출 수준입니다. 광고비가 투입되는 채널일수록 회유가 없다는 뜻이므로, <b>랜딩 페이지의 다음 단계 CTA</b>가 최우선 개선 대상입니다.</p>
+      </div>
+
+      <div class="ins">
+        <div class="hd"><div class="num">17</div><h3>tmoney K-패스 랜딩은 89.2%가 그 자리에서 종료</h3><span class="badge warnb">주의</span></div>
+        <div class="metric"><span class="big">89.2%</span><span class="unit">진입 15,800 → 이탈 14,099</span></div>
+        <p><b>/product/tmoneykpassbp</b>는 진입 페이지 4위이자 이탈 페이지 3위입니다. 캠페인 <b>kpass</b>(15,890세션)와 소스 <b>tmoney</b>(15,725세션)가 거의 그대로 이 한 페이지로 유입됩니다. 인사이트 16의 Affiliates 1.00p와 같은 현상으로, <b>제휴 랜딩 → 가입 퍼널 연결 동선이 없습니다</b>.</p>
+      </div>
+
+      <div class="ins">
+        <div class="hd"><div class="num">18</div><h3>세션의 92%는 캠페인 미태깅 상태</h3><span class="badge warnb">주의</span></div>
+        <div class="metric"><span class="big">92.0%</span><span class="unit">308,715 세션 · campaign = null</span></div>
+        <p>UTM이 붙은 세션은 26,773건(8.0%)뿐이며, 그중 <b>kpass가 15,890(59%)</b>으로 편중되어 있습니다. Direct 채널이 78.4%인 것도 같은 원인으로 보입니다. <b>앱 인입·QR·오프라인 유입에 UTM이 없어</b> 채널 성과 판단이 사실상 불가능합니다 — 계측 개선 없이는 마케팅 ROI 분석이 어렵습니다.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- E. 행동 패턴 -->
+  <section>
+    <div class="grouphd"><div class="gtile">🧭</div>
+      <div><div class="gt">E. 행동 패턴 (2건)</div><div class="gs">언제·어디서 사용자가 사라지는가</div></div>
+    </div>
+    <div class="grid2">
+
+      <div class="ins hi">
+        <div class="hd"><div class="num">19</div><h3>로그인 첫 화면 /my/main에서 절반이 이탈</h3><span class="badge down">높음</span></div>
+        <div class="metric"><span class="big">53.2%</span><span class="unit">이탈 · quick back 29.4% · dead click 12,936</span></div>
+        <div class="minibars">
+          <div class="mb"><span class="mn">방문</span><span class="mt"><i style="width:100%"></i></span><span class="mv">144,832</span></div>
+          <div class="mb"><span class="mn">진입(첫 화면)</span><span class="mt"><i style="width:79.7%"></i></span><span class="mv">115,385</span></div>
+          <div class="mb"><span class="mn">이탈(종료)</span><span class="mt"><i class="negbar" style="width:53.2%"></i></span><span class="mv">77,123</span></div>
+          <div class="mb"><span class="mn">quick back</span><span class="mt"><i class="warnbar" style="width:29.4%"></i></span><span class="mv">42,645</span></div>
+        </div>
+        <p style="margin-top:10px">전체 세션의 <b>34.4%가 /my/main으로 시작</b>하고, 그중 절반 이상이 다른 페이지로 가지 않고 종료합니다. dead click도 사이트 1위(12,936)이며, 인사이트 9의 <b>데이터 사용량 게이지 오류가 바로 이 화면</b>에서 발생합니다. "잔여 데이터 확인" 목적이면 정상 이탈일 수 있으나, <b>dead click 1위라는 점은 정상 이탈로 설명되지 않습니다</b>.</p>
+      </div>
+
+      <div class="ins">
+        <div class="hd"><div class="num">20</div><h3>배포·점검 최적 시간대는 KST 03~05시</h3><span class="badge neutral">참고</span></div>
+        <div class="metric"><span class="big">7.6배</span><span class="unit">피크 17시 20,158 · 저점 03시 2,659</span></div>
+        <div class="trend">
+          <div class="tcol"><div class="tbar" style="height:52.7%"></div><div class="tl">0</div></div>
+          <div class="tcol"><div class="tbar" style="height:26.1%"></div><div class="tl"></div></div>
+          <div class="tcol"><div class="tbar" style="height:17.0%"></div><div class="tl"></div></div>
+          <div class="tcol"><div class="tbar" style="height:13.2%"></div><div class="tl">3</div></div>
+          <div class="tcol"><div class="tbar" style="height:14.6%"></div><div class="tl"></div></div>
+          <div class="tcol"><div class="tbar" style="height:20.1%"></div><div class="tl"></div></div>
+          <div class="tcol"><div class="tbar" style="height:43.7%"></div><div class="tl">6</div></div>
+          <div class="tcol"><div class="tbar" style="height:46.8%"></div><div class="tl"></div></div>
+          <div class="tcol"><div class="tbar" style="height:61.4%"></div><div class="tl"></div></div>
+          <div class="tcol"><div class="tbar" style="height:84.6%"></div><div class="tl">9</div></div>
+          <div class="tcol"><div class="tbar" style="height:98.5%"></div><div class="tl"></div></div>
+          <div class="tcol"><div class="tbar" style="height:97.1%"></div><div class="tl"></div></div>
+          <div class="tcol"><div class="tbar" style="height:90.4%"></div><div class="tl">12</div></div>
+          <div class="tcol"><div class="tbar" style="height:95.3%"></div><div class="tl"></div></div>
+          <div class="tcol"><div class="tbar" style="height:99.2%"></div><div class="tl"></div></div>
+          <div class="tcol"><div class="tbar" style="height:100%"></div><div class="tl">15</div></div>
+          <div class="tcol"><div class="tbar" style="height:97.3%"></div><div class="tl"></div></div>
+          <div class="tcol"><div class="tbar pk" style="height:100%"></div><div class="tl">17</div></div>
+          <div class="tcol"><div class="tbar" style="height:91.8%"></div><div class="tl"></div></div>
+          <div class="tcol"><div class="tbar" style="height:86.8%"></div><div class="tl">19</div></div>
+          <div class="tcol"><div class="tbar" style="height:82.1%"></div><div class="tl"></div></div>
+          <div class="tcol"><div class="tbar" style="height:85.8%"></div><div class="tl">21</div></div>
+          <div class="tcol"><div class="tbar" style="height:84.7%"></div><div class="tl"></div></div>
+          <div class="tcol"><div class="tbar" style="height:78.9%"></div><div class="tl">23</div></div>
+        </div>
+        <p style="margin-top:12px">업무시간(09~18시)에 <b>57.2%</b>가 집중되고 심야(00~06시)는 11.2%에 불과합니다. 상담사 개통 경로가 섞인 서비스 특성상 <b>주간 집중형</b>이며, 03~05시(2,659~4,054세션)가 배포·점검 영향 최소 구간입니다.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACTIONS -->
+  <section class="actions">
+    <div class="sechead"><span class="label">Prioritized Actions</span><span class="more">영향도 × 난이도 순</span></div>
+    <div class="act"><div class="actn">1</div><div><b>reading 'children' 오류 1건 수정 (즉시 · 난이도 낮음)</b> — 세션 60,300건(18.0%)에 영향. 코드 한 곳 수정으로 사이트 전체 JS 오류의 대부분이 해소됩니다. 가장 투입 대비 효과가 큰 작업입니다.</div></div>
+    <div class="act"><div class="actn">2</div><div><b>모바일 개통 퍼널 집중 QA (이번 주 · 난이도 중간)</b> — 모바일 완료율을 PC 수준(33.7%)으로만 올려도 주당 +859건. usimInfoWrite(dead click 6,478) → confirmJoin(3,280) 두 화면을 Chrome Mobile · Mobile Safari · Samsung Internet 3종에서 실기기 검증하세요.</div></div>
+    <div class="act"><div class="actn">3</div><div><b>제휴 퍼널 완료 처리·계측 점검 (이번 주 · 난이도 낮음)</b> — partner 경로 완료율 2.2%는 UX 문제라기보다 <b>완료 페이지 미도달 또는 계측 누락</b>일 가능성이 큽니다. confirmJoin 202 → complete 22 구간의 실제 리코딩을 먼저 확인하세요.</div></div>
+    <div class="act"><div class="actn">4</div><div><b>유료 채널 랜딩에 다음 단계 CTA 추가 (2주 · 난이도 중간)</b> — Affiliates·PaidSearch 세션당 페이지 1.0. 특히 tmoneykpassbp(15,800 진입 / 89.2% 이탈)에 개통 퍼널 진입 동선을 배치하면 즉시 측정 가능한 개선이 나옵니다.</div></div>
+    <div class="act"><div class="actn">5</div><div><b>UTM 계측 체계 정비 (스프린트 · 난이도 중간)</b> — 세션 92%가 캠페인 미태깅. 현재 상태로는 이번 주 Affiliates –31.4%가 예산 조정인지 계측 유실인지 구분할 수 없습니다. 채널 의사결정의 전제 조건입니다.</div></div>
+  </section>
+
+  <div class="foot">
+    Generated by clarity-daily-report skill · 데이터 출처: Microsoft Clarity (query-analytics-dashboard)<br>
+    분석 기간 2026-08-04 ~ 2026-08-10 (KST) · 비교 기간 2026-07-28 ~ 2026-08-03 · 생성 2026-08-11<br>
+    ※ 퍼널 수치는 페이지 방문 기준 근사치이며 순차 전환이 아닙니다 · 시간대는 UTC 원본을 KST(+9)로 변환 · 세션 의도(intent) 지표는 <b>데이터 없음</b>
+  </div>
+
+</div>
+</body>
+</html>

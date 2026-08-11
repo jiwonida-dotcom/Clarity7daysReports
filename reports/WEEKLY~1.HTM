@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>clarity. — 주간 심층 리포트 (최근 4주)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#E9EDF7; --bg2:#F4F6FC; --card:#FFFFFF;
+    --ink:#1B2559; --muted:#9AA4BF; --label:#8B95AD;
+    --blue:#4B63F7; --cyan:#33C9E0; --pos:#28C76F; --neg:#FF5B5B; --warn:#FFB020;
+    --line:#EEF1F7; --soft:#F1F4FB;
+    --shadow:0 10px 30px rgba(80,100,160,0.10);
+    --shadow-sm:0 6px 18px rgba(80,100,160,0.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Poppins','Inter','Pretendard',-apple-system,sans-serif;
+    background:linear-gradient(160deg,var(--bg1),var(--bg2));color:var(--ink);
+    padding:26px;min-height:100vh;-webkit-font-smoothing:antialiased;font-size:14px}
+
+  /* ===== APP SHELL (3-column, image structure) ===== */
+  .app{max-width:1440px;margin:0 auto;background:#FBFCFF;border-radius:28px;
+    box-shadow:0 20px 60px rgba(80,100,160,.13);display:grid;
+    grid-template-columns:236px 1fr 272px;overflow:hidden}
+
+  /* ---- LEFT SIDEBAR ---- */
+  .side{background:var(--card);padding:30px 22px;display:flex;flex-direction:column;min-height:100%}
+  .logo{font-size:23px;font-weight:700;color:var(--blue);letter-spacing:-.02em;margin-bottom:34px}
+  .navsec{font-size:10px;font-weight:600;letter-spacing:.14em;color:var(--label);
+    text-transform:uppercase;margin:26px 0 12px 8px}
+  .nav{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:11px;
+    font-size:13px;font-weight:500;color:#5A6683;cursor:pointer;transition:.16s;
+    background:none;border:none;font-family:inherit;width:100%;text-align:left;text-decoration:none}
+  .nav:hover{background:var(--soft)}
+  .nav .ni{width:17px;height:17px;flex:none;opacity:.75}
+  .nav.on{color:var(--blue);font-weight:600}
+  .nav.on .ni{opacity:1}
+  .nav .nsub{font-size:10.5px;color:var(--muted);font-weight:500;display:block;margin-top:1px}
+  .nav.on .nsub{color:#8fa0f0}
+  .navdot{width:6px;height:6px;border-radius:50%;background:var(--blue);margin-left:auto;flex:none;opacity:0}
+  .nav.on .navdot{opacity:1}
+  .userbox{margin-top:auto;padding-top:26px;display:flex;align-items:center;gap:11px}
+  .ava{width:36px;height:36px;border-radius:50%;flex:none;display:flex;align-items:center;
+    justify-content:center;font-size:13px;font-weight:700;color:#fff;
+    background:linear-gradient(135deg,#5A6CF8,#3B4FE0);box-shadow:0 6px 14px rgba(59,79,224,.3)}
+  .userbox .un{font-size:13px;font-weight:700;line-height:1.3}
+  .userbox .ur{font-size:9.5px;font-weight:600;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+
+  /* ---- MAIN ---- */
+  .main{background:var(--bg2);padding:28px 32px 36px;min-width:0}
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;gap:16px}
+  .arrows{display:flex;gap:8px}
+  .arw{width:34px;height:34px;border-radius:11px;border:none;background:transparent;cursor:pointer;
+    color:#8B95AD;font-size:15px;display:flex;align-items:center;justify-content:center;transition:.16s}
+  .arw:hover:not(:disabled){background:#fff;color:var(--blue);box-shadow:var(--shadow-sm)}
+  .arw:disabled{opacity:.3;cursor:default}
+  .btn{border:none;cursor:pointer;font-family:inherit;border-radius:12px;font-weight:600;
+    letter-spacing:.09em;text-transform:uppercase;transition:.16s}
+  .btn-pri{height:42px;padding:0 26px;font-size:11px;color:#fff;
+    background:linear-gradient(135deg,#5A6CF8,#3B4FE0);box-shadow:0 10px 22px rgba(59,79,224,.32)}
+  .btn-pri:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(59,79,224,.4)}
+  .btn-ghost{height:30px;padding:0 15px;font-size:10px;color:var(--muted);
+    background:#fff;border:1px solid var(--line);letter-spacing:.11em}
+  .btn-ghost:hover{color:var(--blue);border-color:#c9d2f7}
+
+  h2.sec{font-size:19px;font-weight:700;letter-spacing:-.01em}
+  .sechead{display:flex;justify-content:space-between;align-items:center;margin:0 0 16px;gap:12px}
+  .sechead .secsub{font-size:11.5px;color:var(--muted);font-weight:500}
+  section{margin-top:34px}
+
+  /* folder-style KPI cards */
+  .folders{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;padding-top:12px}
+  .folder{position:relative;background:var(--fbg,#fff);border-radius:18px;padding:17px 18px 18px;
+    box-shadow:var(--shadow);isolation:isolate}
+  .folder::before{content:'';position:absolute;top:-10px;left:0;width:74px;height:22px;
+    background:var(--fbg,#fff);border-radius:9px 9px 0 0;z-index:-1}
+  .folder .ftag{font-size:9.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+  .folder .fmid{display:flex;align-items:center;gap:8px;margin:12px 0 26px;min-height:32px}
+  .folder .fbig{font-size:29px;font-weight:700;line-height:1}
+  .folder .flbl{font-size:9.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+  .folder .fname{font-size:15.5px;font-weight:700;margin-top:3px;line-height:1.35}
+  .folder.on{--fbg:linear-gradient(135deg,#5A6CF8,#3B4FE0);color:#fff;
+    box-shadow:0 16px 32px rgba(59,79,224,.34)}
+  .folder.on .ftag,.folder.on .flbl{color:rgba(255,255,255,.72)}
+  .badge{display:inline-flex;align-items:center;gap:3px;font-size:11.5px;font-weight:600;
+    border-radius:8px;padding:2px 8px;white-space:nowrap}
+  .up{color:var(--pos);background:rgba(40,199,111,.12)}
+  .down{color:var(--neg);background:rgba(255,91,91,.12)}
+  .neutral{color:var(--label);background:var(--soft)}
+  .warnb{color:var(--warn);background:rgba(255,176,32,.14)}
+  .folder.on .badge{background:rgba(255,255,255,.2);color:#fff}
+
+  /* summary band */
+  .summary{background:linear-gradient(135deg,#eef1fe,#f6f4ff);border:1px solid #e6e9fb;
+    border-radius:16px;padding:15px 18px;font-size:13.5px;color:#3a447a;font-weight:500;line-height:1.7}
+  .summary b{color:var(--ink)}
+
+  /* file-list style rows */
+  .list{background:transparent}
+  .frow{display:grid;grid-template-columns:38px 1.6fr 1fr 1fr 1fr 74px;align-items:center;gap:14px;
+    padding:9px 14px;border-radius:14px;font-size:13px;transition:.16s;background:transparent}
+  .frow.head{font-size:10px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--label);padding-bottom:4px}
+  .frow.pop{background:#fff;box-shadow:var(--shadow)}
+  .frow:not(.head):hover{background:#fff;box-shadow:var(--shadow-sm)}
+  .ficon{width:34px;height:34px;border-radius:11px;background:#eef1fe;color:var(--blue);
+    display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+  .frow .fnm{font-weight:600}
+  .frow .fmut{color:var(--muted);font-weight:500}
+  .frow .fval{font-weight:700;font-variant-numeric:tabular-nums}
+  .minibar{height:7px;border-radius:5px;background:var(--soft);overflow:hidden}
+  .minibar>i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#5A6CF8,#33C9E0)}
+
+  /* horizontal small cards (shared-with-me) */
+  .hscroll{display:flex;gap:14px;overflow-x:auto;padding:2px 2px 10px}
+  .hscroll::-webkit-scrollbar{height:5px}
+  .hscroll::-webkit-scrollbar-thumb{background:#dfe4f2;border-radius:4px}
+  .hcard{flex:none;width:150px;background:#fff;border-radius:16px;padding:15px 16px;box-shadow:var(--shadow-sm)}
+  .chip{display:inline-block;font-size:8.5px;font-weight:700;letter-spacing:.1em;padding:3px 7px;
+    border-radius:6px;background:var(--soft);color:var(--label);text-transform:uppercase}
+  .hcard .hn{font-size:12.5px;font-weight:600;margin-top:26px;line-height:1.4}
+  .hcard .hv{font-size:19px;font-weight:700;margin-top:5px}
+  .hcard .hd{font-size:10.5px;color:var(--muted);font-weight:600;margin-top:3px}
+
+  /* insight cards */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .ins{background:#fff;border-radius:18px;padding:18px 20px;box-shadow:var(--shadow-sm)}
+  .ins.hi{box-shadow:var(--shadow-sm),0 0 0 1.5px var(--warn) inset}
+  .ins.crit{box-shadow:var(--shadow-sm),0 0 0 1.5px var(--neg) inset}
+  .ins .hd{display:flex;align-items:flex-start;gap:12px;margin-bottom:8px}
+  .num{width:30px;height:30px;border-radius:11px;background:#eef1fe;color:var(--blue);
+    font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+  .ins.crit .num{background:linear-gradient(135deg,#5A6CF8,#3B4FE0);color:#fff;box-shadow:0 6px 14px rgba(59,79,224,.3)}
+  .ins h3{font-size:14px;font-weight:700;line-height:1.45;flex:1}
+  .ins .metric{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:2px 0 11px 42px}
+  .ins .metric .big{font-size:24px;font-weight:700;line-height:1}
+  .ins .metric .unit{font-size:11.5px;color:var(--muted);font-weight:600}
+  .ins p{font-size:12.7px;color:#5A6683;line-height:1.68;margin-left:42px;font-weight:500}
+  .ins p b{color:var(--ink)}
+  .spark{margin:0 0 11px 42px}
+  .sp{display:flex;align-items:center;gap:9px;padding:2.5px 0;font-size:11px;font-weight:600}
+  .sp .sn{width:32px;color:var(--muted);flex:none}
+  .sp .st{flex:1;height:7px;border-radius:5px;background:var(--soft);overflow:hidden}
+  .sp .st>i{display:block;height:100%;border-radius:5px;background:#d8dff6}
+  .sp.cur .sn{color:var(--ink)}
+  .sp.cur .st>i{background:linear-gradient(90deg,#5A6CF8,#33C9E0)}
+  .sp.cur.bad .st>i{background:linear-gradient(90deg,#FF7A8A,#FF5B5B)}
+  .sp.cur.warn .st>i{background:linear-gradient(90deg,#FF9F43,#FF7A45)}
+  .sp .sv{width:80px;text-align:right;color:#5A6683;flex:none}
+  .sp.cur .sv{color:var(--ink)}
+  .grouphd{display:flex;align-items:center;gap:11px;margin:0 0 16px}
+  .gtile{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    font-size:15px;background:#eef1fe;flex:none}
+  .grouphd .gt{font-size:15px;font-weight:700}
+  .grouphd .gs{font-size:11.5px;color:var(--muted);font-weight:500}
+
+  /* ===== DEV HANDOFF (품질 개선 전용 구역) ===== */
+  .devzone{background:linear-gradient(160deg,#F2F5FF,#FAFBFF);border:1px solid #E3E8FA;
+    border-radius:22px;padding:26px 26px 28px;margin-top:36px}
+  .devtop{display:flex;align-items:center;gap:13px;margin-bottom:6px}
+  .devbadge{font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    background:linear-gradient(135deg,#5A6CF8,#3B4FE0);color:#fff;padding:5px 11px;border-radius:8px;
+    box-shadow:0 6px 14px rgba(59,79,224,.28)}
+  .devtop h2{font-size:19px;font-weight:700}
+  .devsub{font-size:12px;color:var(--muted);font-weight:500;line-height:1.6;margin-bottom:20px}
+  .devsum{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}
+  .devsum div{background:#fff;border-radius:13px;padding:12px 14px;box-shadow:var(--shadow-sm)}
+  .devsum .dn{font-size:21px;font-weight:700;line-height:1}
+  .devsum .dl{font-size:10.5px;font-weight:600;color:var(--muted);margin-top:4px}
+  .tickets{display:flex;flex-direction:column;gap:14px}
+  .ticket{background:#fff;border-radius:16px;padding:17px 19px;box-shadow:var(--shadow-sm)}
+  .tkhd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:11px}
+  .tkid{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10.5px;font-weight:700;
+    letter-spacing:.06em;background:#eef1fe;color:var(--blue);padding:4px 9px;border-radius:7px}
+  .pri{font-size:9.5px;font-weight:700;letter-spacing:.1em;padding:4px 9px;border-radius:7px}
+  .p1{background:rgba(255,91,91,.13);color:var(--neg)}
+  .p2{background:rgba(255,176,32,.16);color:#A87005}
+  .p3{background:var(--soft);color:var(--label)}
+  .tkt{font-size:14.5px;font-weight:700;flex:1;min-width:200px}
+  .tkrow{display:grid;grid-template-columns:74px 1fr;gap:14px;padding:8px 0;
+    border-top:1px solid var(--line);font-size:12.7px;line-height:1.68;color:#5A6683;font-weight:500}
+  .tkrow b{color:var(--ink)}
+  .tkk{font-size:10px;font-weight:700;letter-spacing:.07em;color:var(--label);
+    text-transform:uppercase;padding-top:3px}
+  .tkcode{display:block;background:#F4F6FC;border-radius:8px;padding:8px 11px;
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;color:#3a447a;
+    margin:5px 0;overflow-x:auto;white-space:nowrap}
+  .tkul{margin:2px 0 0 15px}
+  .tkul li{padding:2px 0}
+  .tkdo{background:rgba(40,199,111,.07);border-radius:9px;padding:9px 12px;color:#1B2559;font-weight:500}
+
+  /* actions */
+  .act{display:flex;gap:13px;align-items:flex-start;padding:13px 0;border-bottom:1px dashed #e7ebf4;
+    font-size:13.3px;line-height:1.68}
+  .act:last-child{border-bottom:none}
+  .actn{width:25px;height:25px;border-radius:9px;background:linear-gradient(135deg,#5A6CF8,#3B4FE0);
+    color:#fff;font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+
+  /* ---- RIGHT SIDEBAR ---- */
+  .aside{background:var(--card);padding:28px 22px 32px;display:flex;flex-direction:column;gap:24px}
+  .searchpill{display:flex;align-items:center;gap:10px;background:var(--soft);border-radius:13px;
+    padding:9px 10px 9px 16px;font-size:11.5px;color:#5A6683;font-weight:600}
+  .searchpill .sicon{width:30px;height:30px;border-radius:10px;margin-left:auto;flex:none;
+    background:linear-gradient(135deg,#5A6CF8,#3B4FE0);display:flex;align-items:center;
+    justify-content:center;color:#fff;font-size:12px}
+  .atitle{font-size:16px;font-weight:700}
+  .statrow{display:flex;align-items:center;gap:12px;background:var(--soft);border-radius:15px;padding:12px 14px}
+  .statrow .sl{font-size:11.5px;font-weight:700;line-height:1.35;flex:1}
+  .statrow .sl small{display:block;font-size:10px;color:var(--muted);font-weight:600;margin-top:2px}
+  .ring{width:52px;height:52px;position:relative;flex:none}
+  .ring .rv{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:12.5px;font-weight:700}
+  .statrow .su{font-size:10px;color:var(--muted);font-weight:600;width:42px;text-align:right;line-height:1.3}
+  .wcard{border:1px solid rgba(255,91,91,.26);background:rgba(255,91,91,.05);border-radius:16px;padding:15px 16px}
+  .wcard .wt{font-size:12px;font-weight:700;color:var(--neg);margin-bottom:9px}
+  .wcard .wi{font-size:11px;padding:6px 0;border-bottom:1px solid rgba(255,91,91,.12);font-weight:600}
+  .wcard .wi:last-child{border-bottom:none}
+  .wcard .wi span{display:block;color:#5A6683;font-weight:600;margin-top:2px;font-variant-numeric:tabular-nums}
+  .promo{margin-top:auto;text-align:center;background:linear-gradient(160deg,#F2F5FF,#FBFCFF);
+    border-radius:18px;padding:20px 16px}
+  .promo .pt{font-size:13.5px;font-weight:700;margin-top:12px}
+  .promo .ps{font-size:11px;color:var(--muted);font-weight:500;margin-top:4px;line-height:1.5}
+  .promo .btn-pri{width:100%;margin-top:14px}
+  code{background:var(--soft);padding:1px 6px;border-radius:6px;font-size:11.5px}
+  .foot{margin-top:30px;color:var(--muted);font-size:11px;line-height:1.75;text-align:center}
+
+  @media(max-width:1180px){
+    .app{grid-template-columns:1fr}
+    .side,.aside{min-height:auto}
+    .folders{grid-template-columns:1fr 1fr}
+    .grid2{grid-template-columns:1fr}
+    .ins .metric,.ins p,.spark{margin-left:0}
+    .frow{grid-template-columns:34px 1.4fr 1fr 1fr;gap:10px}
+    .frow .hide-s{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ LEFT SIDEBAR ============ -->
+  <div class="side">
+    <div class="logo">clarity.</div>
+    <a class="nav on" href="#top"><span class="ni">◎</span> 주간 리포트<span class="navdot"></span></a>
+
+    <div class="navsec">Weeks</div>
+    <div id="wknav"></div>
+
+    <div class="navsec">Dev Handoff</div>
+    <a class="nav" href="#dev" style="color:var(--blue);font-weight:600"><span class="ni">◈</span> 품질 개선 이관<span class="nsub" style="color:var(--muted)">개발파트 전용 · 6건</span></a>
+
+    <div class="navsec">Sections</div>
+    <a class="nav" href="#gA"><span class="ni">◇</span> 전환·퍼널</a>
+    <a class="nav" href="#gB"><span class="ni">◇</span> 기술 품질</a>
+    <a class="nav" href="#gC"><span class="ni">◇</span> 사용자·디바이스</a>
+    <a class="nav" href="#gD"><span class="ni">◇</span> 유입·채널</a>
+    <a class="nav" href="#gE"><span class="ni">◇</span> 행동 패턴</a>
+    <a class="nav" href="#actions"><span class="ni">◇</span> 권장 액션</a>
+
+    <div class="userbox">
+      <div class="ava">허</div>
+      <div><div class="un">허지원</div><div class="ur">DX혁신팀</div></div>
+    </div>
+  </div>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main" id="top">
+    <div class="topbar">
+      <div class="arrows">
+        <button class="arw" id="prev" title="이전 주차">←</button>
+        <button class="arw" id="next" title="다음 주차">→</button>
+      </div>
+      <button class="btn btn-pri">작성일 2026-08-11</button>
+    </div>
+
+    <div class="sechead">
+      <div><h2 class="sec">핵심 지표</h2><div class="secsub" id="kpisub"></div></div>
+      <span class="btn btn-ghost" style="cursor:default" id="kpiweek"></span>
+    </div>
+    <div class="folders" id="folders"></div>
+
+    <section>
+      <div class="sechead"><h2 class="sec">주간 요약</h2></div>
+      <div class="summary" id="summary"></div>
+    </section>
+
+    <section>
+      <div class="sechead"><h2 class="sec">일별 세션</h2><span class="btn btn-ghost" style="cursor:default">7 days</span></div>
+      <div class="list" id="daily"></div>
+      <p class="secsub" id="dailynote" style="margin-top:10px;padding-left:14px"></p>
+    </section>
+
+    <section>
+      <div class="sechead"><h2 class="sec">개통 퍼널</h2><span class="btn btn-ghost" style="cursor:default">방문 기준 근사</span></div>
+      <div class="hscroll" id="funnel"></div>
+    </section>
+
+    <!-- ============ 품질 개선 — 개발 이관 (주차 선택과 무관한 고정 섹션) ============ -->
+    <div class="devzone" id="dev">
+      <div class="devtop"><span class="devbadge">Dev Handoff</span><h2>품질 개선 이관</h2></div>
+      <p class="devsub">
+        개발파트에서 바로 착수할 수 있도록 <b style="color:var(--ink)">증상 → 영향 → 재현 → 조치</b> 순으로 정리했습니다.
+        분석 용어 없이 확인 가능한 사실만 담았습니다.<br>
+        기준 데이터: <b style="color:var(--ink)">2026-08-04 ~ 08-10 (최근 주차)</b> · 이 섹션은 위 주차 선택과 무관하게 고정입니다.
+      </p>
+
+      <div class="devsum">
+        <div><div class="dn" style="color:var(--neg)">2건</div><div class="dl">P1 · 이번 스프린트</div></div>
+        <div><div class="dn" style="color:#A87005">2건</div><div class="dl">P2 · 다음 스프린트</div></div>
+        <div><div class="dn" style="color:var(--label)">2건</div><div class="dl">P3 · 백로그</div></div>
+      </div>
+
+      <div class="tickets">
+
+        <!-- DEV-01 -->
+        <div class="ticket">
+          <div class="tkhd"><span class="tkid">DEV-01</span><span class="pri p1">P1</span>
+            <span class="tkt">이벤트·제휴 랜딩 페이지에서 스크립트가 중단됨</span></div>
+          <div class="tkrow"><span class="tkk">증상</span><span>
+            페이지 스크립트가 실행 도중 멈춥니다. 없는 요소를 찾은 뒤 그 자식(<code>.children</code>)에 접근하면서 발생합니다.
+            <code class="tkcode">Cannot read properties of undefined (reading 'children')   ← Chrome·Edge·Samsung
+undefined is not an object (evaluating 'e.children')      ← Safari</code>
+            메시지는 둘로 나뉘지만 <b>원인은 같은 코드 한 곳</b>입니다.</span></div>
+          <div class="tkrow"><span class="tkk">영향</span><span>
+            최근 주 <b>47,760세션(전체의 14.2%)</b>. 4주간 10.6% → 11.1% → 11.3% → 14.2%로 계속 늘고 있습니다.
+            같은 기간 <b>다른 오류는 오히려 줄었기</b> 때문에, 전체 오류 증가는 사실상 이 건 하나 때문입니다.</span></div>
+          <div class="tkrow"><span class="tkk">발생 위치</span><span>
+            <ul class="tkul">
+              <li><code>/event-benefit/event/ongoing/12503</code> — 해당 페이지 세션의 <b>66.4%</b></li>
+              <li><code>/event-benefit/event/ongoing/12624</code> — <b>64.6%</b></li>
+              <li><code>/event-benefit/event/ongoing/10314</code> — <b>61.5%</b></li>
+              <li><code>/product/tmoneykpassbp</code> — <b>50.6%</b></li>
+            </ul>
+            개통 퍼널·요금 납부 페이지에서는 발생하지 않습니다.</span></div>
+          <div class="tkrow"><span class="tkk">브라우저</span><span>
+            Samsung Internet <b>55.9%</b> · PC Chrome <b>32.9%</b> · Edge <b>29.1%</b> · Chrome Mobile <b>11.4%</b> ·
+            Mobile Safari <b>0.0%</b>(117,508세션 중 2건).
+            → <b>Chromium 계열에 집중</b>되어 있어 Safari로만 테스트하면 재현되지 않습니다.</span></div>
+          <div class="tkrow"><span class="tkk">재현</span><span>
+            Samsung Internet(또는 PC Chrome)으로 <code>/event-benefit/event/ongoing/12503</code> 접속 → 개발자도구 콘솔 확인.
+            발생률이 66%라 <b>대부분 한 번에 재현</b>됩니다.</span></div>
+          <div class="tkrow"><span class="tkk">조치</span><span class="tkdo">
+            ① <code>.children</code> 접근 전 요소 존재 여부 확인(null 가드) 추가<br>
+            ② 스크립트 실행 시점을 요소 렌더 이후(<code>DOMContentLoaded</code>)로 이동<br>
+            ③ 공통 스크립트가 페이지마다 없는 선택자를 무조건 참조하지 않도록 분기<br>
+            <b>확인 지표:</b> 수정 후 Clarity JS 오류 세션 비율이 23.1% → 9%대로 내려가면 정상</span></div>
+        </div>
+
+        <!-- DEV-02 -->
+        <div class="ticket">
+          <div class="tkhd"><span class="tkid">DEV-02</span><span class="pri p1">P1</span>
+            <span class="tkt">요금 납부에서 다음 단계로 못 넘어가는 비율 급증</span></div>
+          <div class="tkrow"><span class="tkk">증상</span><span>
+            납부 정보 화면(<code>/bill/pay/info</code>)까지 온 사용자가 결제 진행 화면(<code>/bill/pay/payment</code>)으로
+            넘어가지 못하는 비율이 크게 늘었습니다.</span></div>
+          <div class="tkrow"><span class="tkk">영향</span><span>
+            통과율 <b>83.8% → 84.2% → 74.7% → 61.1%</b> (4주 추이).
+            최근 주 진입 38,297세션 중 <b>14,898세션</b>이 결제 화면에 도달하지 못했습니다.
+            개통 퍼널보다 트래픽이 3배 이상 커서 <b>실제 손실 규모는 이쪽이 가장 큽니다</b>.</span></div>
+          <div class="tkrow"><span class="tkk">발생 시점</span><span>
+            <b>7/28 ~ 8/03 주차</b>부터 꺾이기 시작해 다음 주에 더 떨어졌습니다. 그 이전 2주는 83~84%로 안정적이었습니다.</span></div>
+          <div class="tkrow"><span class="tkk">확인 요청</span><span>
+            <ul class="tkul">
+              <li>7/28 ~ 8/03 기간 <b>배포 이력</b> — 결제 관련 변경 있었는지</li>
+              <li>PG·결제 모듈 연동 변경 또는 버전 업 여부</li>
+              <li>본인확인·약관 동의 등 <b>중간 단계가 추가되었는지</b> (기획 변경이면 정상 수치)</li>
+            </ul></span></div>
+          <div class="tkrow"><span class="tkk">조치</span><span class="tkdo">
+            기획 의도된 변경이면 종료, 아니면 회귀로 처리.
+            <b>먼저 배포 이력 대조 → 변경 없으면 해당 구간 세션 리코딩 확인</b> 순서를 권장합니다.</span></div>
+        </div>
+
+        <!-- DEV-03 -->
+        <div class="ticket">
+          <div class="tkhd"><span class="tkid">DEV-03</span><span class="pri p2">P2</span>
+            <span class="tkt">마이페이지 데이터 잔여량 게이지가 동작하지 않음</span></div>
+          <div class="tkrow"><span class="tkk">증상</span><span>
+            <code>/my/main</code>의 데이터 사용량 프로그레스 애니메이션 호출이 실패합니다.
+            <code class="tkcode">uiCommon.progressAni.amountBar is not a function          10,440 세션
+Identifier '$commUtil' has already been declared            2,994 세션</code></span></div>
+          <div class="tkrow"><span class="tkk">원인 추정</span><span>
+            <b>①</b> <code>uiCommon</code> 로드가 끝나기 전에 <code>amountBar()</code>를 호출 — 스크립트 순서 문제<br>
+            <b>②</b> <code>$commUtil</code> 중복 선언 = <b>공통 스크립트가 두 번 삽입</b>되고 있음</span></div>
+          <div class="tkrow"><span class="tkk">영향</span><span>
+            <code>/my/main</code>은 전체 세션의 <b>34.4%가 진입하는 첫 화면</b>이고, dead click(눌러도 반응 없는 클릭)이
+            <b>12,966회로 사이트 1위</b>입니다. 게이지 미동작이 여기에 영향을 줬을 가능성이 있습니다.</span></div>
+          <div class="tkrow"><span class="tkk">조치</span><span class="tkdo">
+            공통 스크립트 중복 삽입 제거 → 로드 순서 정리 → 호출부에 방어 코드 추가</span></div>
+        </div>
+
+        <!-- DEV-04 -->
+        <div class="ticket">
+          <div class="tkhd"><span class="tkid">DEV-04</span><span class="pri p2">P2</span>
+            <span class="tkt">개통 첫 화면에서 눌러도 반응 없는 클릭이 많음</span></div>
+          <div class="tkrow"><span class="tkk">증상</span><span>
+            <code>/onsale/usimInfoWrite</code>에서 dead click <b>6,489회</b> 발생 — 진입 세션당 <b>0.61회</b>입니다.
+            즉 <b>두 세션 중 한 번꼴</b>로 "눌렀는데 아무 일도 일어나지 않는" 클릭이 나옵니다.
+            같은 화면에서 rage click(같은 자리 연타)도 570회로 사이트 4위입니다.</span></div>
+          <div class="tkrow"><span class="tkk">확인 방법</span><span>
+            Clarity <b>히트맵</b>에서 해당 페이지를 열면 클릭이 몰린 지점을 볼 수 있습니다. 두 경우를 구분해 주세요.
+            <ul class="tkul">
+              <li>클릭 가능해 보이지만 실제로는 버튼이 아닌 요소 (안내 텍스트·아이콘 등)</li>
+              <li>버튼이 맞는데 <b>이벤트 바인딩이 빠졌거나</b> 비활성 상태인 요소</li>
+            </ul></span></div>
+          <div class="tkrow"><span class="tkk">조치</span><span class="tkdo">
+            전자면 시각 처리 변경(클릭 가능해 보이지 않게), 후자면 바인딩 수정.
+            <b>확인 지표:</b> 세션당 dead click 0.61회 → 0.3회 이하</span></div>
+        </div>
+
+        <!-- DEV-05 -->
+        <div class="ticket">
+          <div class="tkhd"><span class="tkid">DEV-05</span><span class="pri p3">P3</span>
+            <span class="tkt">페이지 로딩 속도 — 모바일 권장치의 2~3배</span></div>
+          <div class="tkrow"><span class="tkk">현황</span><span>
+            모바일 평균 로드 <b>7.02초</b> / LCP <b>4.67초</b> (Google 권장 2.5초 이하)<br>
+            PC는 로드 <b>3.60초</b>로 가장 빠른데 LCP만 <b>17.13초</b>로 역전 — <b>계측 오류이거나</b> 지연 로딩되는
+            대형 요소(배너·차트)가 있을 수 있습니다.</span></div>
+          <div class="tkrow"><span class="tkk">조치</span><span class="tkdo">
+            ① PC의 LCP 대상 요소부터 특정 (계측 오류면 제외 처리)<br>
+            ② 실제 지연이면 히어로 이미지·배너 우선순위 조정, 지연 로딩 대상에서 제외</span></div>
+        </div>
+
+        <!-- DEV-06 -->
+        <div class="ticket">
+          <div class="tkhd"><span class="tkid">DEV-06</span><span class="pri p3">P3</span>
+            <span class="tkt">유입 경로 계측 누락 (GTM 작업)</span></div>
+          <div class="tkrow"><span class="tkk">현황</span><span>
+            전체 세션의 <b>92%에 캠페인 파라미터(UTM)가 없습니다</b>. 이 때문에 Direct 채널이 78%로 부풀려져,
+            어떤 유입이 성과를 냈는지 판단할 수 없습니다.</span></div>
+          <div class="tkrow"><span class="tkk">추가 건</span><span>
+            모바일 App/Web 구분용 커스텀 태그 <code>platform</code>도 현재 데이터가 반환되지 않습니다.
+            <code class="tkcode">UA에 'umobileapp' 포함 → clarity("set","platform","app")
+그 외                        → clarity("set","platform","web")</code>
+            GTM의 MS_Clarity 태그에서 위 설정이 정상 동작하는지 함께 확인 부탁드립니다.</span></div>
+          <div class="tkrow"><span class="tkk">조치</span><span class="tkdo">
+            앱 인입·QR·오프라인 유입 링크에 UTM 부여 → GTM 태그 발화 조건 점검 →
+            <code>platform</code> 태그 정상화<br>
+            <b>확인 지표:</b> UTM 태깅률 12.6% → 40% 이상</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="groups"></div>
+
+    <section id="actions">
+      <div class="sechead"><h2 class="sec">권장 액션</h2><span class="btn btn-ghost" style="cursor:default" id="acweek"></span></div>
+      <div id="actionlist"></div>
+    </section>
+
+    <div class="foot" id="foot"></div>
+  </div>
+
+  <!-- ============ RIGHT SIDEBAR ============ -->
+  <div class="aside">
+    <div class="searchpill"><span id="asideweek">2026-08-04 ~ 08-10</span><span class="sicon">◷</span></div>
+
+    <div>
+      <div class="atitle" style="margin-bottom:14px">Statistic</div>
+      <div id="stats" style="display:flex;flex-direction:column;gap:11px"></div>
+    </div>
+
+    <div class="wcard">
+      <div class="wt">⚠ 4주 연속 악화</div>
+      <div class="wi">JS 오류 세션 비율<span>20.2 → 20.5 → 21.7 → 23.1%</span></div>
+      <div class="wi">Quick back 세션 비율<span>28.1 → 28.1 → 29.5 → 30.2%</span></div>
+      <div class="wi" style="color:var(--warn)">요금 납부 전환율 (3주 하락)<span>83.8 → 84.2 → 74.7 → 61.1%</span></div>
+    </div>
+
+    <div class="promo">
+      <svg width="150" height="96" viewBox="0 0 150 96" fill="none" style="margin:0 auto;display:block">
+        <ellipse cx="75" cy="86" rx="56" ry="7" fill="#E9EDF7"/>
+        <rect x="34" y="30" width="34" height="46" rx="7" fill="#4B63F7" opacity=".9"/>
+        <rect x="74" y="16" width="34" height="60" rx="7" fill="#33C9E0" opacity=".85"/>
+        <rect x="42" y="40" width="18" height="4" rx="2" fill="#fff" opacity=".8"/>
+        <rect x="42" y="50" width="12" height="4" rx="2" fill="#fff" opacity=".55"/>
+        <rect x="82" y="28" width="18" height="4" rx="2" fill="#fff" opacity=".8"/>
+        <rect x="82" y="38" width="12" height="4" rx="2" fill="#fff" opacity=".55"/>
+        <circle cx="112" cy="24" r="9" fill="#FFB020" opacity=".85"/>
+        <circle cx="32" cy="22" r="6" fill="#FF5B5B" opacity=".7"/>
+        <path d="M20 76h110" stroke="#DDE3F5" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="pt">우선순위 1건만 처리한다면</div>
+      <div class="ps">DEV-01 · children 오류 수정<br>— 세션 14.2%에 영향</div>
+      <button class="btn btn-pri" onclick="location.hash='#dev'">개발 이관 보기</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const W = [
+  {id:'W1', range:'2026-07-14 ~ 2026-07-20', short:'7/14 – 7/20', aside:'2026-07-14 ~ 07-20', days:['07-14','07-15','07-16','07-17','07-18','07-19','07-20'], dow:['화','수','목','금','토','일','월']},
+  {id:'W2', range:'2026-07-21 ~ 2026-07-27', short:'7/21 – 7/27', aside:'2026-07-21 ~ 07-27', days:['07-21','07-22','07-23','07-24','07-25','07-26','07-27'], dow:['화','수','목','금','토','일','월']},
+  {id:'W3', range:'2026-07-28 ~ 2026-08-03', short:'7/28 – 8/03', aside:'2026-07-28 ~ 08-03', days:['07-28','07-29','07-30','07-31','08-01','08-02','08-03'], dow:['화','수','목','금','토','일','월']},
+  {id:'W4', range:'2026-08-04 ~ 2026-08-10', short:'8/04 – 8/10', aside:'2026-08-04 ~ 08-10', days:['08-04','08-05','08-06','08-07','08-08','08-09','08-10'], dow:['화','수','목','금','토','일','월']}
+];
+const D = {
+  sessions:[336211,354300,348436,336952], users:[201173,219682,226388,208436], pv:[1223699,1255008,1171611,1202433],
+  pps:[3.64,3.54,3.36,3.57],
+  mobile:[304825,318473,320025,302951], pc:[28589,32891,30995,33844], tablet:[2675,3137,3038,3414],
+  mobShare:[90.7,89.8,90.4,89.0], pcShare:[8.5,9.3,8.8,9.9],
+  neu:[189168,207197,215584,199336], ret:[149052,150217,138491,140892], newShare:[55.9,58.0,60.9,58.6],
+  rage:[1145,1249,1235,1214], dead:[35265,38431,39262,38114], qb:[94598,99502,102723,101690],
+  rageRate:[0.34,0.35,0.35,0.36], deadRate:[10.5,10.8,11.3,11.3], qbRate:[28.1,28.1,29.5,30.2],
+  jserr:[67888,72690,75536,77932], jsRate:[20.2,20.5,21.7,23.1],
+  children:[35712,39491,39325,47760], childRate:[10.6,11.1,11.3,14.2],
+  f1:[5973,8279,6875,10632], f2:[3639,4427,3594,5286], f3:[3685,5369,4409,7250],
+  f4:[1913,3137,2378,4467], f5:[1573,2681,1909,3918], f6:[1449,2331,1733,3419], done:[1229,1950,1423,2702],
+  conv:[20.6,23.6,20.7,25.4],
+  mobF1:[6629,8908,7567,11759], mobDone:[1012,1543,1083,2490], pcF1:[2123,3130,2458,3756], pcDone:[449,878,453,1132],
+  mobConv:[15.3,17.3,14.3,21.2], pcConv:[21.1,28.1,18.4,30.1], gap:[1.38,1.62,1.29,1.42],
+  pEntry:[892,1073,1182,996], pDone:[30,18,34,22], pConv:[3.36,1.68,2.88,2.21], partner:[1774,2096,2488,1991],
+  billInfo:[60939,54553,33918,38297], billPay:[51094,45916,25347,23399], billConv:[83.8,84.2,74.7,61.1],
+  dur:[152.53,170.43,158.68,189.83], act:[82.5,87.28,83.93,94.67], actRate:[54.1,51.2,52.9,49.9],
+  scroll:[63.68,61.83,59.09,60.35],
+  myMain:[156980,166802,165352,145435], myExit:[78127,88707,95369,77003], myExitRate:[49.8,53.2,57.7,52.9],
+  myDead:[14736,15250,15026,12966], usimDead:[4593,6465,4966,6489], usimDeadPer:[0.77,0.78,0.72,0.61],
+  chDirect:[269217,285552,279846,265203], chAffil:[16315,18018,23142,15971], chRef:[14711,18924,15525,22344], chPaid:[9133,10498,13358,14880],
+  utm:[37830,41400,48352,44772], utmAll:[350220,370262,367415,355306], utmRate:[10.8,11.2,13.2,12.6],
+  daily:[[50042,56249,48809,41906,40510,41928,55894],[50792,54921,53649,50645,44735,43844,55632],
+         [52358,52528,55865,65673,43988,35608,44039],[42605,44757,48079,50074,49624,44359,57596]]
+};
+const n = v => v.toLocaleString('ko-KR');
+const f1x = v => (Math.round(v*10)/10).toFixed(1);
+function wow(arr,i,invert){
+  if(i===0) return '<span class="badge neutral">기준</span>';
+  const d=(arr[i]-arr[i-1])/Math.abs(arr[i-1])*100;
+  const good = invert ? d<0 : d>0;
+  const cls = Math.abs(d)<0.05 ? 'neutral' : (good?'up':'down');
+  return `<span class="badge ${cls}">${d>0?'▲':(d<0?'▼':'–')} ${f1x(Math.abs(d))}%</span>`;
+}
+function wowPP(arr,i,invert){
+  if(i===0) return '<span class="badge neutral">기준</span>';
+  const d=arr[i]-arr[i-1];
+  const good = invert ? d<0 : d>0;
+  const cls = Math.abs(d)<0.05 ? 'neutral' : (good?'up':'down');
+  return `<span class="badge ${cls}">${d>0?'▲':(d<0?'▼':'–')} ${f1x(Math.abs(d))}%p</span>`;
+}
+function spark(arr, cur, fmt, tone){
+  const abs = arr.map(Math.abs), mx = Math.max(...abs);
+  return '<div class="spark">'+arr.map((v,i)=>{
+    const w = mx? Math.max(4, Math.abs(v)/mx*100) : 4;
+    return `<div class="${i===cur?'sp cur '+(tone||''):'sp'}"><span class="sn">${W[i].id}</span><span class="st"><i style="width:${w}%"></i></span><span class="sv">${fmt(v)}</span></div>`;
+  }).join('')+'</div>';
+}
+function ring(pct, color, txt){
+  const p = Math.max(0, Math.min(100, pct));
+  return `<div class="ring"><svg viewBox="0 0 36 36" width="52" height="52">
+    <circle cx="18" cy="18" r="15.915" fill="none" stroke="#E4E9F6" stroke-width="3"></circle>
+    <circle cx="18" cy="18" r="15.915" fill="none" stroke="${color}" stroke-width="3"
+      stroke-dasharray="${p} ${100-p}" stroke-dashoffset="25" stroke-linecap="round"></circle>
+  </svg><div class="rv">${txt}</div></div>`;
+}
+const pf = v => f1x(v)+'%';
+const nf = v => n(v);
+const xf = v => (Math.round(v*100)/100).toFixed(2)+'배';
+
+const GROUPS = [
+  {gid:'gA', icon:'🎯', title:'A. 전환·퍼널', sub:'개통·납부 경로에서 실제로 돈이 새는 지점', ids:[1,3,5,6]},
+  {gid:'gB', icon:'🛠', title:'B. 기술 품질', sub:'전환 이전에 먼저 고쳐야 할 프론트엔드 문제', ids:[7,8,9,10]},
+  {gid:'gC', icon:'👥', title:'C. 사용자·디바이스', sub:'트래픽이 어디서 오고 어디서 빠졌는가', ids:[11,12,13,14]},
+  {gid:'gD', icon:'📡', title:'D. 유입·채널', sub:'채널별 규모와 품질 격차', ids:[15,16,17,18]},
+  {gid:'gE', icon:'🧭', title:'E. 행동 패턴', sub:'언제·어디서 사용자가 사라지는가', ids:[19,20]}
+];
+
+const INS = {
+1:{t:'개통 퍼널 최종 전환율', sev:i=>D.conv[i]<21?'crit':(D.conv[i]<24?'hi':''),
+   big:i=>pf(D.conv[i]), unit:i=>`진입 ${n(D.f1[i])} → 완료 ${n(D.done[i])}`,
+   badge:i=>wowPP(D.conv,i,false), sp:i=>spark(D.conv,i,pf,D.conv[i]<21?'bad':''),
+   p:i=>`페이지 방문 기준 근사 전환율입니다. 4주 범위는 <b>20.6% ~ 25.4%</b>로 최대 4.8%p 진폭이며, 진입량(${n(D.f1[i])})과 전환율이 <b>같은 방향으로 움직입니다</b> — 유입이 늘 때 전환율도 오르는 패턴이라 퍼널 자체 개선보다 <b>유입 품질(채널 믹스) 변화</b>가 지배적일 가능성이 큽니다.`},
+3:{t:'모바일 개통 완료율이 PC보다 구조적으로 낮다', sev:()=>'hi',
+   big:i=>pf(D.mobConv[i]), unit:i=>`모바일 · PC ${pf(D.pcConv[i])} · 격차 ${D.gap[i]}배`,
+   badge:i=>wowPP(D.mobConv,i,false), sp:i=>spark(D.gap,i,xf,'warn'),
+   p:i=>`4주 <b>모두</b> PC가 우위(격차 1.29~1.62배)로, 특정 주의 일시 현상이 아닙니다. 트래픽의 ${pf(D.mobShare[i])}가 모바일이므로 손실 규모는 모바일이 압도적입니다. 이번 주 모바일 완료율을 PC 수준(${pf(D.pcConv[i])})까지 올리면 <b>+${n(Math.round(D.mobF1[i]*D.pcConv[i]/100 - D.mobDone[i]))}건</b> 추가 개통이 가능합니다. <span style="color:var(--muted)">※ openRequestComplete 기준·페이지뷰 기반 근사치</span>`},
+5:{t:'요금 납부 전환율 3주째 하락 — 최대 낙폭', sev:i=>D.billConv[i]<75?'crit':'',
+   big:i=>pf(D.billConv[i]), unit:i=>`info ${n(D.billInfo[i])} → payment ${n(D.billPay[i])}`,
+   badge:i=>wowPP(D.billConv,i,false), sp:i=>spark(D.billConv,i,pf,D.billConv[i]<75?'bad':''),
+   p:i=>`<b>83.8% → 84.2% → 74.7% → 61.1%</b>로 <b>2주 만에 23.1%p 붕괴</b>했습니다. 4주 전체에서 가장 큰 낙폭이며, 개통 퍼널보다 트래픽이 3~6배 크기 때문에 <b>절대 손실은 여기가 최대</b>입니다. W3(7/28~8/03) 구간에 변화가 시작되므로 <b>해당 주 배포 이력을 최우선 대조</b>해야 합니다.`},
+6:{t:'제휴(partner) 퍼널이 4주 내내 작동하지 않음', sev:()=>'hi',
+   big:i=>pf(D.pConv[i]), unit:i=>`진입 ${n(D.pEntry[i])} → 완료 ${n(D.pDone[i])}건`,
+   badge:i=>wowPP(D.pConv,i,false), sp:i=>spark(D.pConv,i,pf,'warn'),
+   p:i=>`4주 완료율이 <b>1.68% ~ 3.36%</b>로 본 퍼널(20.6~25.4%)의 <b>1/10 수준에 고정</b>되어 있습니다. 진입은 892~1,182건으로 안정적인데 완료만 18~34건입니다. 이 정도로 일관되게 낮으면 UX 문제라기보다 <b>완료 페이지 미도달 또는 계측 누락</b>을 먼저 의심해야 합니다. 제휴 전체 세션은 ${n(D.partner[i])}건입니다.`},
+7:{t:'JS 오류 세션 비율 4주 연속 상승', sev:()=>'crit',
+   big:i=>pf(D.jsRate[i]), unit:i=>`${n(D.jserr[i])} 세션 영향`,
+   badge:i=>wowPP(D.jsRate,i,true), sp:i=>spark(D.jsRate,i,pf,'bad'),
+   p:i=>`<b>20.2% → 20.5% → 21.7% → 23.1%</b>. 세션 수는 등락했지만 <b>오류 비율만 단조 상승</b>했습니다. 즉 트래픽 변동으로 설명되지 않는 <b>코드 측 회귀(regression)</b>입니다. 절대량도 67,888 → ${n(D.jserr[i])}건으로 늘었습니다. 4주간 배포 이력과 대조가 필요합니다.`},
+8:{t:"단일 오류 reading 'children'이 급증", sev:()=>'crit',
+   big:i=>n(D.children[i]), unit:i=>`세션 · 전체의 ${pf(D.childRate[i])}`,
+   badge:i=>wow(D.children,i,true), sp:i=>spark(D.childRate,i,pf,'bad'),
+   p:i=>`<code>Cannot read properties of undefined (reading 'children')</code> 단일 오류가 <b>10.6% → 11.1% → 11.3% → 14.2%</b>로 확대됐습니다. 특히 <b>최근 주에 +2.9%p 급등</b>해 전체 JS 오류 증가분의 대부분을 설명합니다. DOM 조회 결과가 null인 상태에서 <code>.children</code>에 접근하는 코드 <b>1곳</b>만 수정하면 되는 건이라 투입 대비 효과가 가장 큽니다.`},
+9:{t:'usimInfoWrite dead click — 퍼널 1단계 마찰', sev:()=>'hi',
+   big:i=>n(D.usimDead[i]), unit:i=>`dead click · 세션당 ${D.usimDeadPer[i]}회`,
+   badge:i=>wow(D.usimDead,i,true), sp:i=>spark(D.usimDead,i,nf,'warn'),
+   p:i=>`절대량은 4,593~6,489회로 진입량을 따라 움직이지만, <b>세션당 발생 횟수는 0.77 → 0.78 → 0.72 → 0.61로 개선 추세</b>입니다. 퍼널 첫 화면에서 <b>두 세션에 한 번꼴로 "눌렀는데 반응 없음"</b>이 여전히 발생하므로, 히트맵으로 무반응 요소를 특정할 가치가 있습니다. 다만 개선 추세인 만큼 <b>폼 검증 실패·필수값 안내 등 다른 마찰 원인</b>도 함께 봐야 합니다.`},
+10:{t:'/my/main dead click 사이트 1위 유지', sev:()=>'',
+   big:i=>n(D.myDead[i]), unit:i=>`dead click · 방문 ${n(D.myMain[i])}`,
+   badge:i=>wow(D.myDead,i,true), sp:i=>spark(D.myDead,i,nf,'warn'),
+   p:i=>`로그인 후 첫 화면이 4주 내내 dead click 1위입니다(12,966~15,250회). 데이터 잔여량 게이지 스크립트(<code>uiCommon.progressAni.amountBar</code>) 오류가 이 화면에서 발생하는 것과 무관하지 않아 보입니다. 최근 주에 감소했으나 방문량도 함께 줄어(${n(D.myMain[i])}) <b>비율 개선으로 보기는 이릅니다</b>.`},
+11:{t:'세션·사용자 규모', sev:()=>'',
+   big:i=>n(D.sessions[i]), unit:i=>`사용자 ${n(D.users[i])} · PV ${n(D.pv[i])}`,
+   badge:i=>wow(D.sessions,i,false), sp:i=>spark(D.sessions,i,nf,''),
+   p:i=>`4주 336K → 354K → 348K → 337K로 <b>±5% 박스권</b>입니다. 추세적 감소는 아니며 W2가 정점입니다. 세션당 페이지는 ${D.pps[i]}장(4주 3.36~3.64)으로 안정적이라, <b>총량보다 아래의 구성 변화(신규·채널·디바이스)를 봐야</b> 의미가 나옵니다.`},
+12:{t:'신규 vs 재방문 구성', sev:()=>'',
+   big:i=>pf(D.newShare[i]), unit:i=>`신규 ${n(D.neu[i])} · 재방문 ${n(D.ret[i])}`,
+   badge:i=>wowPP(D.newShare,i,false), sp:i=>spark(D.newShare,i,pf,''),
+   p:i=>`신규 비중이 <b>55.9% → 58.0% → 60.9% → 58.6%</b>로 W3에 정점을 찍고 꺾였습니다. 재방문 세션은 138K~150K로 <b>거의 변하지 않아</b>, 주간 총량 변동은 <b>사실상 전부 신규 획득 측 변화</b>입니다. 채널 지표(인사이트 13~15)와 함께 읽어야 합니다.`},
+13:{t:'PC 비중 상승 — 전환율에 유리한 믹스 변화', sev:()=>'',
+   big:i=>pf(D.pcShare[i]), unit:i=>`PC ${n(D.pc[i])} · 모바일 ${pf(D.mobShare[i])}`,
+   badge:i=>wowPP(D.pcShare,i,false), sp:i=>spark(D.pcShare,i,pf,''),
+   p:i=>`PC 비중이 <b>8.5% → 9.3% → 8.8% → 9.9%</b>로 완만히 상승했습니다. PC의 개통 완료율이 모바일보다 1.3~1.6배 높으므로(인사이트 2), <b>전환율 개선의 일부는 실제 UX 개선이 아니라 디바이스 믹스 효과</b>일 수 있습니다. 전환 성과를 평가할 때는 <b>디바이스별로 나눠 봐야</b> 오판을 피합니다.`},
+14:{t:'체류는 늘었는데 집중도는 떨어졌다', sev:()=>'',
+   big:i=>Math.round(D.dur[i])+'초', unit:i=>`활성 ${Math.round(D.act[i])}초 · 활성 비율 ${pf(D.actRate[i])}`,
+   badge:i=>wow(D.dur,i,false), sp:i=>spark(D.actRate,i,pf,D.actRate[i]<51?'warn':''),
+   p:i=>`평균 세션 길이는 152초 → 190초로 <b>+24% 늘었지만</b>, 활성 시간 비율은 <b>54.1% → 51.2% → 52.9% → 49.9%로 하락</b>했습니다. 화면을 켜둔 채 실제로는 조작하지 않는 시간이 늘었다는 뜻으로, <b>체류시간을 성과 지표로 쓰면 안 되는</b> 대표 사례입니다. 스크롤 깊이도 63.7% → ${pf(D.scroll[i])}로 함께 낮아졌습니다.`},
+15:{t:'Affiliates — 4주 중 최대 변동 채널', sev:i=>Math.abs((D.chAffil[i]-D.chAffil[Math.max(0,i-1)])/D.chAffil[Math.max(0,i-1)])>0.15?'hi':'',
+   big:i=>n(D.chAffil[i]), unit:i=>'세션 · 제휴 채널',
+   badge:i=>wow(D.chAffil,i,false), sp:i=>spark(D.chAffil,i,nf,'warn'),
+   p:i=>`16.3K → 18.0K → <b>23.1K</b> → 16.0K로 W3에 급등했다가 <b>–31.0% 급감</b>했습니다. 진폭이 4주 채널 중 가장 큽니다. 신규 세션 감소분과 시점이 정확히 겹치므로(인사이트 10) <b>주간 총량 변동의 주된 설명 변수</b>입니다. 다만 세션당 페이지가 1.0에 가까워 <b>양은 커도 회유 기여는 거의 없습니다</b>.`},
+16:{t:'Referral 지속 성장 — 자연 유입 확대', sev:()=>'',
+   big:i=>n(D.chRef[i]), unit:i=>'세션 · 외부 사이트 경유',
+   badge:i=>wow(D.chRef,i,false), sp:i=>spark(D.chRef,i,nf,''),
+   p:i=>`14.7K → 18.9K → 15.5K → <b>22.3K</b>로 4주 최고치입니다. 커뮤니티 유입(ppomppu 등)이 포함된 채널로, <b>유료 제휴가 빠진 자리를 일부 메우는</b> 구조가 보입니다. 비용이 들지 않는 유입이므로 <b>어떤 게시물·사이트에서 오는지 파악해 재현 가능한지</b> 확인할 가치가 있습니다.`},
+17:{t:'PaidSearch 4주 연속 증가', sev:()=>'',
+   big:i=>n(D.chPaid[i]), unit:i=>'세션 · 검색 광고',
+   badge:i=>wow(D.chPaid,i,false), sp:i=>spark(D.chPaid,i,nf,''),
+   p:i=>`9.1K → 10.5K → 13.4K → <b>14.9K로 4주 내내 증가(+63%)</b>했습니다. 유일하게 단조 증가한 채널입니다. 다만 세션당 페이지 1.02·랜딩 이탈이 커서 <b>투입 증가가 전환으로 이어졌는지는 현재 계측으로 확인 불가</b>합니다 — 인사이트 16이 전제 조건입니다.`},
+18:{t:'UTM 태깅률 10~13% — 채널 판단의 구조적 한계', sev:()=>'hi',
+   big:i=>pf(D.utmRate[i]), unit:i=>`태깅 ${n(D.utm[i])} / 전체 ${n(D.utmAll[i])}`,
+   badge:i=>wowPP(D.utmRate,i,false), sp:i=>spark(D.utmRate,i,pf,'warn'),
+   p:i=>`4주 내내 <b>10.8% ~ 13.2%</b>에 머물러 있습니다. 세션의 <b>87% 이상이 캠페인 미태깅</b>이라 Direct 채널이 78%로 부풀려집니다. 이 상태에서는 인사이트 13의 Affiliates –31%가 <b>예산 조정인지 계측 유실인지 구분할 수 없습니다</b>. 마케팅 의사결정의 선행 과제입니다.`},
+19:{t:'/my/main 이탈률 — 세션 3분의 1의 종착지', sev:i=>D.myExitRate[i]>55?'hi':'',
+   big:i=>pf(D.myExitRate[i]), unit:i=>`방문 ${n(D.myMain[i])} · 종료 ${n(D.myExit[i])}`,
+   badge:i=>wowPP(D.myExitRate,i,true), sp:i=>spark(D.myExitRate,i,pf,D.myExitRate[i]>55?'bad':''),
+   p:i=>`<b>49.8% → 53.2% → 57.7% → 52.9%</b>로 W3 정점 후 개선됐습니다. "잔여 데이터 확인" 목적이면 정상 이탈일 수 있으나, 같은 화면이 <b>dead click 사이트 1위</b>(인사이트 8)라는 점은 정상 이탈로 설명되지 않습니다. 이탈 자체보다 <b>이탈 직전 무반응 클릭</b>을 히트맵으로 특정하는 게 실효적입니다.`},
+20:{t:'Quick back 비율 4주 연속 상승', sev:()=>'hi',
+   big:i=>pf(D.qbRate[i]), unit:i=>`${n(D.qb[i])} 세션 · dead click ${pf(D.deadRate[i])}`,
+   badge:i=>wowPP(D.qbRate,i,true), sp:i=>spark(D.qbRate,i,pf,'bad'),
+   p:i=>`<b>28.1% → 28.1% → 29.5% → 30.2%</b>. 세션 3건 중 1건이 들어가자마자 되돌아옵니다. dead click 비율(10.5% → ${pf(D.deadRate[i])})도 함께 올랐고 rage click은 0.34~0.36%로 낮게 안정적입니다. 즉 <b>분노가 아니라 "기대와 다름"이 지배적 마찰 유형</b>이며, 링크·버튼 라벨과 실제 도착 페이지의 불일치를 점검할 신호입니다.`}
+};
+
+const ACTIONS = {
+ 0:[["reading 'children' 오류 추적 시작","W1 시점 35,712세션(10.6%)에서 이미 발생 중입니다. 이 주차가 기준선이므로 이후 증가분과 대조할 배포 이력을 확보하세요."],
+    ["요금 납부 전환율 83.8% 기준선 기록","이 주차가 4주 중 정상 상태입니다. 이후 61.1%까지 떨어지므로 W1 대비 무엇이 바뀌었는지가 핵심 단서입니다."],
+    ["usimInfoWrite 상태를 회귀 테스트 기준으로 확보","dead click이 세션당 0.77회로 4주 중 가장 높지만 퍼널 성과는 안정적이었던 주차입니다. 이 시점 화면 상태를 비교 기준으로 남겨두세요."]],
+ 1:[["개통 진입 +38.6% 급증 원인 규명","진입 5,973 → 8,279로 4주 중 최대 증가입니다. 전환율도 23.6%로 함께 올랐으므로 어떤 유입이 들어왔는지 파악해 재현하세요."],
+    ["제휴 퍼널 완료 18건 — 4주 최저","진입은 1,073으로 늘었는데 완료는 오히려 줄었습니다. 계측 유실 가능성이 가장 뚜렷한 주차입니다."],
+    ["PC 완료율 28.1% 정점 활용","4주 중 PC 전환이 가장 좋았던 주입니다. 모바일(17.3%)과의 화면 차이를 이 주차 리코딩으로 비교하면 개선 힌트가 나옵니다."]],
+ 2:[["요금 납부 전환율 붕괴 시작점 조사","84.2% → 74.7%로 꺾인 주차입니다. 7/28~8/03 배포·결제 대행사 변경 이력을 최우선 확인하세요."],
+    ["/my/main 이탈률 57.7% 4주 최고","방문은 유지되는데 이탈만 늘었습니다. 이 주차 리코딩에서 첫 화면 로딩 상태를 확인하세요."],
+    ["Affiliates 23.1K 정점 — 품질 검증","4주 최대 유입인데 개통 전환율은 20.7%로 최저입니다. 유입량과 전환이 반대로 움직인 유일한 주차입니다."]],
+ 3:[["reading 'children' 오류 1건 수정 (즉시)","47,760세션(14.2%)에 영향. 전주 대비 +2.9%p 급등해 4주 중 가장 시급합니다. 코드 한 곳 수정으로 대부분 해소됩니다."],
+    ["요금 납부 전환율 61.1% — 긴급 점검","4주 최저이자 3주 연속 하락. 개통 퍼널보다 트래픽이 3.6배 커서 절대 손실이 가장 큽니다."],
+    ["모바일 개통 퍼널 QA","모바일 21.2% vs PC 30.1%. 격차를 메우면 주당 +1,049건. usimInfoWrite 화면을 3종 브라우저 실기기 검증하세요."]]
+};
+
+const SUMS=[
+ `<b>W1 요약 —</b> 4주 중 <b>가장 건강한 기준선</b>입니다. 요금 납부 전환율 <b>83.8%</b>, JS 오류율 <b>20.2%</b>, quick back <b>28.1%</b>로 세 지표 모두 4주 최저 악화 수준입니다. 이후 3주간 이 값들이 모두 나빠지므로, <b>W1의 배포 상태를 회귀 테스트 기준</b>으로 삼는 것이 유효합니다.`,
+ `<b>W2 요약 —</b> 세션 <b>354,300으로 4주 최대</b>, 개통 진입도 <b>+38.6%</b> 급증했고 전환율 23.6%·PC 완료율 28.1%로 <b>성과가 가장 좋았던 주</b>입니다. 다만 같은 주에 제휴 퍼널 완료는 18건으로 4주 최저를 기록해, <b>제휴 경로만 반대로 움직였습니다</b>.`,
+ `<b>W3 요약 —</b> <b>변곡점이 된 주차</b>입니다. 요금 납부 전환율이 84.2% → <b>74.7%</b>로 꺾이고, /my/main 이탈률 <b>57.7%</b>·신규 비중 <b>60.9%</b> 모두 4주 최고를 찍었습니다. Affiliates 유입은 23.1K로 최대였는데 개통 전환율은 20.7%로 최저 — <b>양은 늘고 질은 떨어진</b> 주입니다.`,
+ `<b>W4 요약 —</b> 개통 전환율은 <b>25.4%로 4주 최고</b>지만 착시에 주의해야 합니다. PC 비중이 9.9%로 최고였고 PC 전환율이 모바일의 1.42배라 <b>믹스 효과가 섞여</b> 있습니다. 반면 JS 오류율 <b>23.1%</b>, quick back <b>30.2%</b>, 요금 납부 전환율 <b>61.1%</b>는 모두 4주 최악입니다.`];
+
+const FSTEPS=[
+ {c:'ST 1',k:'f1',nm:'상품 정보 입력'},{c:'ST 2',k:'f2',nm:'가입 유형 선택'},
+ {c:'ST 3',k:'f3',nm:'가입자 정보'},{c:'ST 4',k:'f4',nm:'가입번호 입력'},
+ {c:'ST 5',k:'f5',nm:'납부·상담일정'},{c:'ST 6',k:'f6',nm:'가입 정보 확인'},
+ {c:'DONE',k:'done',nm:'개통·가입 완료'}];
+
+let cur = 3;
+const $ = id => document.getElementById(id);
+
+function render(){
+  const i = cur, w = W[i];
+
+  // ---- left nav: weeks (최근 순) ----
+  $('wknav').innerHTML = W.map((_,k)=>k).reverse().map((k,pos)=>
+    `<button class="nav ${k===i?'on':''}" onclick="sel(${k})">
+       <span class="ni">▸</span>
+       <span>${pos===0?'최근 주차':pos+'주 전'}<span class="nsub">${W[k].short}</span></span>
+       <span class="navdot"></span></button>`).join('');
+
+  // ---- KPI folder cards ----
+  const cards=[
+    {on:true, tag:'SESSIONS', big:n(D.sessions[i]), b:wow(D.sessions,i,false), lbl:'TRAFFIC', nm:'전체 세션'},
+    {tag:'CONVERSION', big:pf(D.conv[i]), b:wowPP(D.conv,i,false), lbl:'FUNNEL', nm:'개통 전환율'},
+    {tag:'JS ERRORS', big:pf(D.jsRate[i]), b:wowPP(D.jsRate,i,true), lbl:'QUALITY', nm:'오류 세션 비율'},
+    {tag:'BILL PAY', big:pf(D.billConv[i]), b:wowPP(D.billConv,i,false), lbl:'PAYMENT', nm:'요금 납부 전환율'}];
+  $('folders').innerHTML = cards.map(c=>
+    `<div class="folder ${c.on?'on':''}">
+       <div class="ftag">${c.tag}</div>
+       <div class="fmid"><span class="fbig">${c.big}</span>${c.b}</div>
+       <div class="flbl">${c.lbl}</div><div class="fname">${c.nm}</div>
+     </div>`).join('');
+  $('kpisub').textContent = `${w.range} · 직전 주차 대비`;
+  $('kpiweek').textContent = w.id;
+  $('summary').innerHTML = SUMS[i];
+
+  // ---- daily list ----
+  const dd=D.daily[i], mx=Math.max(...dd), mn=Math.min(...dd);
+  $('daily').innerHTML =
+    `<div class="frow head"><span></span><span>날짜</span><span>요일</span><span>세션</span><span>전일 대비</span><span></span></div>`+
+    dd.map((v,k)=>{
+      const prev = k===0?null:dd[k-1];
+      const dlt = prev? (v-prev)/prev*100 : null;
+      const bd = dlt===null? '<span class="badge neutral">–</span>'
+        : `<span class="badge ${dlt>0?'up':'down'}">${dlt>0?'▲':'▼'} ${f1x(Math.abs(dlt))}%</span>`;
+      return `<div class="frow ${v===mx?'pop':''}">
+        <span class="ficon">${k+1}</span>
+        <span class="fnm">${w.days[k]}</span>
+        <span class="fmut">${w.dow[k]}요일</span>
+        <span class="fval">${n(v)}</span>
+        <span>${bd}</span>
+        <span class="minibar hide-s"><i style="width:${v/mx*100}%"></i></span></div>`;
+    }).join('');
+  $('dailynote').innerHTML =
+    `최고 <b style="color:var(--ink)">${w.days[dd.indexOf(mx)]}(${w.dow[dd.indexOf(mx)]}) ${n(mx)}</b> · 최저 <b style="color:var(--ink)">${w.days[dd.indexOf(mn)]}(${w.dow[dd.indexOf(mn)]}) ${n(mn)}</b> · 편차 ${f1x((mx-mn)/mn*100)}% · 일평균 ${n(Math.round(dd.reduce((a,b)=>a+b,0)/7))}`;
+
+  // ---- funnel horizontal cards ----
+  $('funnel').innerHTML = FSTEPS.map((s,k)=>{
+    const v=D[s.k][i], prev=k===0?null:D[FSTEPS[k-1].k][i];
+    const keep = prev? v/prev*100 : 100;
+    return `<div class="hcard"><span class="chip">${s.c}</span>
+      <div class="hn">${s.nm}</div><div class="hv">${n(v)}</div>
+      <div class="hd" style="color:${k===0?'var(--muted)':(keep<60?'var(--neg)':(keep<85?'var(--warn)':'var(--pos)'))}">
+        ${k===0?'퍼널 진입':'유지 '+f1x(keep)+'%'}</div></div>`;
+  }).join('');
+
+  // ---- insight groups ----
+  let seq=0;
+  $('groups').innerHTML = GROUPS.map(g=>
+    `<section id="${g.gid}"><div class="grouphd"><div class="gtile">${g.icon}</div>
+       <div><div class="gt">${g.title} (${g.ids.length}건)</div><div class="gs">${g.sub}</div></div></div>
+     <div class="grid2">${g.ids.map(id=>{
+       const o=INS[id], sv=o.sev(i); seq++;
+       return `<div class="ins ${sv}"><div class="hd"><div class="num">${seq}</div><h3>${o.t}</h3>${o.badge(i)}</div>
+         <div class="metric"><span class="big">${o.big(i)}</span><span class="unit">${o.unit(i)}</span></div>
+         ${o.sp(i)}<p>${o.p(i)}</p></div>`;}).join('')}</div></section>`).join('');
+
+  // ---- actions ----
+  $('actionlist').innerHTML = ACTIONS[i].map((a,k)=>
+    `<div class="act"><div class="actn">${k+1}</div><div><b>${a[0]}</b> — ${a[1]}</div></div>`).join('');
+  $('acweek').textContent = w.id;
+
+  // ---- right aside stats ----
+  $('asideweek').textContent = w.aside;
+  const st=[
+    {t:'개통 전환율',s:'퍼널 진입 → 완료',v:D.conv[i],txt:pf(D.conv[i]),c:'#4B63F7',u:'근사치'},
+    {t:'요금 납부 전환율',s:'info → payment',v:D.billConv[i],txt:pf(D.billConv[i]),c:D.billConv[i]<75?'#FF5B5B':'#28C76F',u:'통과율'},
+    {t:'JS 오류 세션',s:'전체 세션 대비',v:D.jsRate[i],txt:pf(D.jsRate[i]),c:'#FFB020',u:'영향률'},
+    {t:'Quick back',s:'즉시 되돌아감',v:D.qbRate[i],txt:pf(D.qbRate[i]),c:'#33C9E0',u:'세션'},
+    {t:'모바일 비중',s:`PC ${pf(D.pcShare[i])}`,v:D.mobShare[i],txt:pf(D.mobShare[i]),c:'#4B63F7',u:'트래픽'}];
+  $('stats').innerHTML = st.map(x=>
+    `<div class="statrow"><div class="sl">${x.t}<small>${x.s}</small></div>
+      ${ring(x.v,x.c,x.txt)}<div class="su">${x.u}</div></div>`).join('');
+
+  // ---- arrows ----
+  $('prev').disabled = i===0; $('next').disabled = i===3;
+
+  $('foot').innerHTML =
+    `작성일 <b>2026-08-11</b> · 표시 주차 <b>${w.range}</b> (KST) · 전체 분석 범위 2026-07-14 ~ 2026-08-10<br>
+     데이터 출처: Microsoft Clarity · 퍼널 수치는 페이지 방문 기준 근사치이며 순차 전환이 아닙니다<br>
+     디바이스별 퍼널은 openRequestComplete 기준 페이지뷰 기반 근사치 · 주차별 합산 쿼리 특성상 개별 조회값과 0.5% 내외 차이가 있을 수 있습니다`;
+}
+function sel(k){ cur=k; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+document.getElementById('prev').onclick=()=>{ if(cur>0) sel(cur-1); };
+document.getElementById('next').onclick=()=>{ if(cur<3) sel(cur+1); };
+render();
+</script>
+</body>
+</html>
